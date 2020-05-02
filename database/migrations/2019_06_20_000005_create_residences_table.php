@@ -18,10 +18,12 @@ class CreateResidencesTable extends Migration
         Schema::create('residences', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code');
+            $table->description();  
+            $table->string("address")->nullable();
 
             // location 
             $table->unsignedInteger('city_id')->nullable();
-            $table->unsignedInteger('parish_id')->nullable();
+            $table->unsignedInteger('zone_id')->nullable();
             $table->coordinates();  
             $table->string('zipcode')->nullable();
  

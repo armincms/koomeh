@@ -26,19 +26,9 @@ class ImportTheUsages extends Action
             return $usages->contains($usage);
         });
 
-        ResidencesUsage::insert($insertions->map(function($icon) {
-            return compact("icon");
+        ResidencesUsage::insert($insertions->map(function($name) {
+            return compact("name");
         })->all());  
-
-        $usages = ResidencesUsage::whereDoesntHave('translations')->get()->pluck("id")->all();
-
-        (new ResidencesUsage)->translations()->insert($insertions->map(function($usage) use (&$usages) { 
-
-            return [
-                "usage" => $usage, 
-                "residences_usage_id" => array_shift($usages),
-            ];
-        })->all());
 
         option()->put("_residences_usages_imported_", 1);
         
@@ -62,6 +52,7 @@ class ImportTheUsages extends Action
     {
         return [  
             __("Short Stay"),
+            __("Long Stay"),
             __("Party"), 
         ];
     }

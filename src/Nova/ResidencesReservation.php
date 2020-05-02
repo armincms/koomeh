@@ -28,16 +28,8 @@ class ResidencesReservation extends Resource
      * @var array
      */
     public static $search = [
-    ];
-
-    /**
-     * The columns that should be searched in the translation table.
-     *
-     * @var array
-     */
-    public static $searchTranslations = [
         'name'
-    ];
+    ]; 
 
     /**
      * Get the displayable label of the resource.
@@ -60,15 +52,13 @@ class ResidencesReservation extends Resource
         return [
             ID::make()->sortable(),  
 
-            $this->translatable([
-                Text::make(__('Name'), 'name')
-                    ->required()
-                    ->sortable()
-                    ->rules('required', 'max:250'),
+            Text::make(__('Name'), 'name')
+                ->required()
+                ->sortable()
+                ->rules('required', 'max:250'),
 
-                Text::make(__('Help'), 'help')
-                    ->sortable(),
-            ]), 
+            Text::make(__('Help'), 'help')
+                ->sortable(), 
 
             $this->toggle(__("Active"), 'active'),
 

@@ -28,16 +28,8 @@ class ResidencesUsage extends Resource
      * @var array
      */
     public static $search = [
-    ];
-
-    /**
-     * The columns that should be searched in the translation table.
-     *
-     * @var array
-     */
-    public static $searchTranslations = [
         'usage'
-    ];
+    ]; 
 
     /**
      * Get the displayable label of the resource.
@@ -60,11 +52,10 @@ class ResidencesUsage extends Resource
         return [
             ID::make()->sortable(), 
             
-            $this->translatable([
-                Text::make(__('Usage'), 'usage')
-                    ->sortable()
-                    ->rules('required', 'max:255'),
-            ]), 
+            Text::make(__('Usage'), 'usage')
+                ->sortable()
+                ->required()
+                ->rules('required', 'max:255'),
         ];
     }
 
@@ -102,13 +93,18 @@ class ResidencesUsage extends Resource
     }
 
     /**
-     * Get the actions available for the resource.
+     * Get the actions available on the entity.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new Actions\ImportTheUsages)->canSee(function() {
+                return ! option("_residences_usages_imported_", 0) && 
+                        \Auth::guard('admin')->check();
+            }), 
+        ];
     }
 }

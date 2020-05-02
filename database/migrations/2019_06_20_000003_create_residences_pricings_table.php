@@ -15,6 +15,7 @@ class CreateResidencesPricingsTable extends Migration
     { 
         Schema::create('residences_pricings', function (Blueprint $table) {
             $table->bigIncrements('id'); 
+            $table->resource('label'); 
             $table->unsignedBigInteger('floor_price_id')->nullable();
             $table->unsignedBigInteger('ceiling_price_id')->nullable();
             $table->boolean('default')->default(0); 

@@ -26,19 +26,9 @@ class ImportTheResidences extends Action
             return $residences->contains($name);
         });
 
-        ResidencesType::insert($insertions->map(function($icon) {
-            return compact("icon");
-        })->all());  
-
-        $residences = ResidencesType::whereDoesntHave('translations')->get()->pluck("id")->all();
-
-        (new ResidencesType)->translations()->insert($insertions->map(function($insertion) use (&$residences) { 
-
-            return [
-                "name" => $insertion, 
-                "residences_type_id" => array_shift($residences),
-            ];
-        })->all());
+        ResidencesType::insert($insertions->values()->map(function($name) {
+            return compact('name');
+        })->filter()->all());   
 
         option()->put("_residences_types_imported_", 1);
         

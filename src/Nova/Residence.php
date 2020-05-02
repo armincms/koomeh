@@ -16,6 +16,7 @@ use Armincms\Facility\Facility as FacilityModel;
 use Armincms\Facility\Nova\Fields\ManyToMany;
 use OwenMelbz\RadioField\RadioButton;
 use Armincms\RawData\Common;
+use Manmohanjit\BelongsToDependency\BelongsToDependency;
 
 class Residence extends Resource
 {
@@ -184,10 +185,9 @@ class Residence extends Resource
                 ->display("condition")
                 ->hideFromIndex(),
 
-            $this->translatable([
-                $this->abstractField(),
-                $this->gutenbergField(),
-            ]),
+            $this->abstractField(),
+
+            $this->gutenbergField(),
         ];
     }
 
@@ -208,21 +208,23 @@ class Residence extends Resource
     {
         return array_merge([
             BelongsTo::make(__("City"), 'city', \Armincms\Location\Nova\City::class)
-                ->searchable()
                 ->hideFromIndex(),
 
             BelongsTo::make(__("Zone"), 'zone', \Armincms\Location\Nova\Zone::class)
-                ->searchable()
-                ->hideFromIndex(),
+                ->onlyOnDetail(),
+
+            BelongsToDependency::make(__('Zone'), 'zone', \Armincms\Location\Nova\Zone::class)
+                ->dependsOn('city', 'location_id')
+                ->onlyOnForms(), 
 
             Text::make(__("Location"), function() {
                 return optional($this->zone)->name ." - ".optional($this->city)->name;
-            }),
-        ], $this->coordinates(), $this->translatable([
+            })->onlyOnIndex(),
+        ], collect($this->coordinates())->map->hideFromIndex()->all(), [
             Text::make(__("Address"), 'address')
                 ->nullable()
                 ->hideFromIndex(),
-        ])->data);
+        ]);
     }
 
     public function conditionFields()

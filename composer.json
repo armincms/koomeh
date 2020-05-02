@@ -8,6 +8,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.1.0", 
+        "manmohanjit/nova-belongs-to-dependency": "~1.1",
         "davidpiesse/nova-toggle": "0.*", 
         "armincms/armincms": "~0.1",
         "armincms/currency": "~0.1", 

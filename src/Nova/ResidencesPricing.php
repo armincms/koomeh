@@ -72,12 +72,10 @@ class ResidencesPricing extends Resource
                 ->nullable()
                 ->withMeta(['singularLabel' => __("Ceiling Price")]),
 
-            $this->translatable([
-                Text::make(__('Label'), 'label')
-                    ->sortable()
-                    ->required()
-                    ->rules('required', 'max:250'), 
-            ]),   
+            Text::make(__('Label'), 'label')
+                ->sortable()
+                ->required()
+                ->rules('required', 'max:250'),  
 
             $this->toggle(__("Default"), 'default')->default(0),
 

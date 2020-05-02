@@ -26,22 +26,14 @@ class ImportTheConditions extends Action
             return $conditions->contains($condition);
         });
 
-        ResidencesCondition::insert($insertions->map(function($insertion) { 
+        ResidencesCondition::insert($insertions->map(function($condition) { 
             return [
+                'condition' => $condition,
                 'dedicated' => 0,
                 'user_id'   => app(Request::class)->user()->id,
                 'user_type' => app(Request::class)->user()->getMorphClass(),
             ];
-        })->all());
-
-        $keys = ResidencesCondition::whereDoesntHave('translations')->get()->modelKeys();
-
-        (new ResidencesCondition)->translations()->insert($insertions->map(function($condition) use (&$keys) {
-            return [
-                "condition" => $condition,
-                "residences_condition_id" => array_shift($keys),
-            ];
-        })->all());
+        })->all()); 
 
         option()->put("_residences_conditions_imported_", 1);
         

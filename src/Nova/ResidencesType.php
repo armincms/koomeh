@@ -28,16 +28,8 @@ class ResidencesType extends Resource
      * @var array
      */
     public static $search = [
-    ];
-
-    /**
-     * The columns that should be searched in the translation table.
-     *
-     * @var array
-     */
-    public static $searchTranslations = [
         'name'
-    ];
+    ]; 
 
     /**
      * Get the displayable label of the resource.
@@ -59,11 +51,11 @@ class ResidencesType extends Resource
     {
         return [
             ID::make()->sortable(), 
-            $this->translatable([
-                Text::make(__('Name'), 'name')
+
+            Text::make(__('Name'), 'name')
                     ->sortable()
+                    ->required()
                     ->rules('required', 'max:255'),
-            ]), 
         ];
     }
 

@@ -20,28 +20,19 @@ class ImportThePricings extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     { 
-        $pricings = ResidencesPricing::get();
-
-        $last = intval(optional($pricings->last())->id ?? 0) + 1;
-
+        $pricings = ResidencesPricing::get(); 
+        
         $insertions = Collection::make($this->pricings())->reject(function($pricing) use ($pricings) {
             return $pricings->pluck('label')->contains($pricing);
         });
 
-        ResidencesPricing::insert($insertions->map(function($pricing, $index) use ($last) { 
-            return [
-                'id' => $last + $index,
+        ResidencesPricing::insert($insertions->map(function($pricing, $index) { 
+            return [ 
+                'label' => $pricing,
                 'default' => $pricing == 'پایه', 
                 'adaptive' => $pricing == 'توافقی',  
             ];
-        })->all()); 
-
-        (new ResidencesPricing)->translations()->insert($insertions->map(function($pricing, $index) use ($last) {
-            return [
-                "label" => $pricing,
-                "residences_pricing_id" => $last + $index,
-            ];
-        })->all());
+        })->all());  
 
         option()->put("_residences_pricings_imported_", 1);
         

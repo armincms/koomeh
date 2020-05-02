@@ -15,6 +15,7 @@ class CreateREsidencesTypesTable extends Migration
     {
         Schema::create('residences_types', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->resource();    
             $table->softDeletes();
             $table->string('icon')->default('home');
         });

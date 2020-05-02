@@ -20,15 +20,13 @@ class ImportTheReservations extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     { 
-        $reservations = ResidencesReservation::get(); 
+        $reservations = ResidencesReservation::get()->pluck('name'); 
 
         $insertions = Collection::make($this->reservations())->reject(function($reservation) use ($reservations) {
-            return $reservations->where('name', $reservation['name'])->count();
+            return $reservations->contains($reservation['name']);
         });
 
-        ResidencesReservation::insert($insertions->map(function($reservation) { 
-            $reservation = array_except($reservation, ['name', 'help']);
-
+        ResidencesReservation::insert($insertions->map(function($reservation) {  
             return array_merge([
                 'user_confirmation' => 0,
                 'admin_confirmation' => 0,
@@ -37,24 +35,9 @@ class ImportTheReservations extends Action
                 'cancelable' => 0,
                 'default' => 0,
                 'active' => 0,
+                'help' => null,
             ], $reservation);
-        })->all());  
-
-        $reservations = ResidencesReservation::whereDoesntHave('translations')->get();
-
-        (new ResidencesReservation)->translations()->insert($insertions->map(function($insertion) use ($reservations) { 
-
-            return [
-                "name" => array_pull($insertion, 'name'),
-                "help" => array_pull($insertion, 'help'),
-                "residences_reservation_id" => $reservations->first(function($reservation) use ($insertion) {
-                    $assoc = array_intersect_assoc($reservation->toArray(), $insertion);
-
-                    return count($assoc) == count($insertion);
-
-                })->id,
-            ];
-        })->all());
+        })->all());   
 
         option()->put("_residences_reservations_imported_", 1);
         

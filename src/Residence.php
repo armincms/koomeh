@@ -4,18 +4,16 @@ namespace Armincms\Koomeh;
 use Armincms\Concerns\Authorization;
 use Armincms\Concerns\IntractsWithMedia;
 use Armincms\Contracts\Authorizable;
-use Armincms\Facility\Facilities;
-use Armincms\Localization\Concerns\HasTranslation;
-use Armincms\Localization\Contracts\Translatable;
+use Armincms\Facility\Facilities; 
 use Armincms\Location\Location;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 
-class Residence extends Model implements Translatable, HasMedia, Authorizable 
+class Residence extends Model implements HasMedia, Authorizable 
 {
-	use HasTranslation, SoftDeletes, IntractsWithMedia, Facilities, Authorization;
+	use SoftDeletes, IntractsWithMedia, Facilities, Authorization;
 
 	/**
 	 * The relations to eager load on every query.

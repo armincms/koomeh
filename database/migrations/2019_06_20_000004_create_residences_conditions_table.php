@@ -15,6 +15,7 @@ class CreateResidencesConditionsTable extends Migration
     {
         Schema::create('residences_conditions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->resource('condition');  
             $table->boolean('dedicated')->default(0); 
             $table->auth();
             $table->integer('order')->default(time());

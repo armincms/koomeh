@@ -15,6 +15,7 @@ class CreateResidencesUsagesTable extends Migration
     {
         Schema::create('residences_usages', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->resource("usage"); 
             $table->softDeletes();
             $table->string('icon')->default('home');
         });

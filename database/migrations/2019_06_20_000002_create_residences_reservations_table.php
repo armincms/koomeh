@@ -15,6 +15,7 @@ class CreateResidencesReservationsTable extends Migration
     {
         Schema::create('residences_reservations', function (Blueprint $table) {
             $table->bigIncrements('id'); 
+            $table->resource(); 
             $table->boolean('active')->default(1);
             $table->boolean('default')->default(0); 
             $table->boolean('admin_confirmation')->default(0);
@@ -22,6 +23,7 @@ class CreateResidencesReservationsTable extends Migration
             $table->boolean('force_payment')->default(0);
             $table->boolean('cancelable')->default(0); 
             $table->boolean('force_reserve')->default(1); 
+            $table->string('help')->nullable(); 
             $table->softDeletes();
         });
     }

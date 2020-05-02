@@ -63,12 +63,10 @@ class ResidencesCondition extends Resource
 
             $this->userField(),
 
-            $this->translatable([
-                Text::make(__('Condition'), 'condition')
-                    ->sortable()
-                    ->required()
-                    ->rules('required', 'max:255'),
-            ]), 
+            Text::make(__('Condition'), 'condition')
+                ->sortable()
+                ->required()
+                ->rules('required', 'max:255'), 
 
             $this->toggle(__("Dedicated"), 'dedicated'),
         ];
