@@ -31,9 +31,9 @@ class CreateResidencesTable extends Migration
             $table->duration();
             $table->boolean('reservable')->default(0); 
             $table->unsignedTinyInteger('guest')->default(1);
-            $table->unsignedTinyInteger('adult')->nullable(1);
-            $table->unsignedTinyInteger('child')->nullable(0);
-            $table->unsignedTinyInteger('babe')->nullable(0);
+            $table->unsignedTinyInteger('adult')->default(1);
+            $table->unsignedTinyInteger('child')->default(0);
+            $table->unsignedTinyInteger('babe')->default(0);
             $table->auth('agent'); 
             $table->publication();
             $table->timestamps();
