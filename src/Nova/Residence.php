@@ -195,7 +195,7 @@ class Residence extends Resource
     {
         return  [
             $this
-                ->imageField() 
+                ->imageField('Gallery', 'gallery') 
                 ->stacked()
                 ->customPropertiesFields([
                     $this->toggle(__("Master"), "master"),
