@@ -13,14 +13,4 @@ class KoomehCondition extends Model
 	{
 		return $this->belongsTo(KoomehConditionGroup::class);
 	}
-
-	/**
-	 * Query related KoomehProperty.
-	 * 
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	 */
-	public function properties()
-	{
-		return $this->belongsToMany(KoomehProperty::class, 'koomeh_condition_property');
-	}
 }

@@ -13,14 +13,4 @@ class KoomehAmenity extends Model
 	{
 		return $this->belongsTo(KoomehAmenityGroup::class);
 	}
-
-	/**
-	 * Query related KoomehProperty.
-	 * 
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	 */
-	public function properties()
-	{
-		return $this->belongsToMany(KoomehProperty::class, 'koomeh_amenity_property');
-	}
 }
