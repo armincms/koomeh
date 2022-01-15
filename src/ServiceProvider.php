@@ -54,9 +54,18 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function conversions()
     {
         $this->app->afterResolving('conversion', function($manager) {
-            $manager->extend('property-gallery', function() {
+            $manager->extend('article', function() {
                 return new \Armincms\Conversion\CommonConversion;
-            }); 
+            });
+            $manager->extend('podcast', function() {
+                return new \Armincms\Conversion\CommonConversion;
+            });
+            $manager->extend('post', function() {
+                return new \Armincms\Conversion\CommonConversion;
+            });
+            $manager->extend('video', function() {
+                return new \Armincms\Conversion\CommonConversion;
+            });
         });
     }
 
@@ -103,7 +112,10 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function fragments()
     {   
         Gutenberg::fragments([
-            Cypress\Fragments\Property::class, 
+            Cypress\Fragments\Article::class,
+            Cypress\Fragments\Podcast::class,
+            Cypress\Fragments\Post::class,
+            Cypress\Fragments\Video::class,
         ]);
     }
 
@@ -114,8 +126,13 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
      */
     protected function widgets()
     {   
-        Gutenberg::widgets([ 
-            Cypress\Widgets\SingleProperty::class, 
+        Gutenberg::widgets([
+            Cypress\Widgets\BlogCategory::class,
+            Cypress\Widgets\BlogTag::class,
+            Cypress\Widgets\SingleArticle::class,
+            Cypress\Widgets\SinglePodcast::class,
+            Cypress\Widgets\SinglePost::class,
+            Cypress\Widgets\SingleVideo::class,
         ]);
     }
 
@@ -126,8 +143,15 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
      */
     protected function templates()
     {   
-        Gutenberg::templates([ 
-            \Armincms\Koomeh\Gutenberg\Templates\SingleProperty::class, 
+        Gutenberg::templates([
+            \Armincms\Koomeh\Gutenberg\Templates\IndexArticle::class,
+            \Armincms\Koomeh\Gutenberg\Templates\IndexPodcast::class,
+            \Armincms\Koomeh\Gutenberg\Templates\IndexPost::class,
+            \Armincms\Koomeh\Gutenberg\Templates\IndexVideo::class,
+            \Armincms\Koomeh\Gutenberg\Templates\SingleArticle::class,
+            \Armincms\Koomeh\Gutenberg\Templates\SinglePodcast::class,
+            \Armincms\Koomeh\Gutenberg\Templates\SinglePost::class,
+            \Armincms\Koomeh\Gutenberg\Templates\SingleVideo::class,
         ]); 
     }
 
@@ -139,7 +163,11 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function menus()
     {    
         $this->app->booted(function() {  
-            $menus = array_unique(array_merge((array) config('nova-menu.menu_item_types'), [ 
+            $menus = array_unique(array_merge((array) config('nova-menu.menu_item_types'), [
+                Menus\Article::class,
+                Menus\Podcast::class,
+                Menus\Post::class,
+                Menus\Video::class,
             ]));
 
             app('config')->set('nova-menu.menu_item_types', $menus);  

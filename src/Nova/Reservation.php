@@ -127,27 +127,4 @@ class Reservation extends Resource
             'online_payment' => __('The user needs to pay to register his request'), 
         ];
     }
-
-    /**
-     * Build an "index" query for the given resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        return $query->withCount(['properties']);
-    }
-
-    /**
-     * Determine if the current user can delete the given resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    public function authorizedToDelete(Request $request)
-    {
-        return $this->properties_count ? false : parent::authorizedToDelete($request);
-    }
 }

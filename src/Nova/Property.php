@@ -120,9 +120,7 @@ class Property extends Resource
                 Text::make('code', function($resource) {
                     return "#{$resource->code}";
                 }),
-            ]),  
-            
-            $this->resourceUrls(),
+            ]), 
  
             Stack::make(__('Residence Detail'), 'property_type_id', [
                 BelongsTo::make(__('Residence Type'), 'propertyType', PropertyType::class),
