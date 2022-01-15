@@ -1,21 +1,20 @@
 {
     "name": "armincms/koomeh",
-    "description": "A Laravel Nova tool.",
+    "description": "Armincms rental home package.",
     "keywords": [
         "laravel",
-        "nova"
+        "nova",
+        "armincms",
+        "koomeh"
     ],
     "license": "MIT",
-    "require": {
-        "php": ">=7.1.0", 
-        "manmohanjit/nova-belongs-to-dependency": "~1.1",
-        "davidpiesse/nova-toggle": "0.*", 
-        "armincms/armincms": "~0.1",
-        "armincms/currency": "~0.1", 
-        "armincms/facility": "~0.1",  
-        "armincms/bios": "~0.1",  
-        "armincms/raw-data": "~0.1", 
-        "armincms/location": "~0.1" 
+    "require": {  
+        "alvinhu/nova-child-select": "^1.0", 
+        "armincms/contract": "^1.0", 
+        "armincms/location": "^2.0", 
+        "armincms/nova-targomaan": "^1.0", 
+        "armincms/markable": "^0.1",  
+        "whitecube/nova-flexible-content": "^0.2" 
     },
     "autoload": {
         "psr-4": {
@@ -25,7 +24,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Armincms\\Koomeh\\ToolServiceProvider"
+                "Armincms\\Koomeh\\ServiceProvider"
             ]
         }
     },
@@ -33,5 +32,6 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "version": "2.0.0"
 }
