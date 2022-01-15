@@ -72,4 +72,27 @@ class ConditionGroup extends Resource
     {
         return '/resources/'.static::uriKey();
     }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount(['conditions']);
+    }
+
+    /**
+     * Determine if the current user can delete the given resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        return $this->conditions_count ? false : parent::authorizedToDelete($request);
+    }
 }
