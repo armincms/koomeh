@@ -4,6 +4,8 @@ namespace Armincms\Koomeh\Models;
 
 class KoomehReservation extends Model  
 {      
+    use HasProperties;
+    
     /**
      * The attributes that should be cast.
      *
