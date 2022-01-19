@@ -6,9 +6,19 @@ use Armincms\Contract\Concerns\InteractsWithModel;
 use Zareismail\Cypress\Fragment; 
 use Zareismail\Cypress\Contracts\Resolvable; 
 
-abstract class Blog extends Fragment implements Resolvable
+class Property extends Fragment implements Resolvable
 {   
-    use InteractsWithModel; 
+    use InteractsWithModel;
+
+    /**
+     * Get the resource Model class.
+     * 
+     * @return
+     */
+    public function model(): string
+    {
+        return \Armincms\Koomeh\Models\KoomehProperty::class;
+    } 
 
     /**
      * Apply custom query to the given query.
@@ -21,6 +31,16 @@ abstract class Blog extends Fragment implements Resolvable
     {
         return $query->unless(\Auth::guard('admin')->check(), function($query) {
             return $query->published();
-        });
+        })->with([
+            'propertyType', 
+            'roomType', 
+            'paymentBasis', 
+            'reservation', 
+            'state',
+            'city',
+            'zone',
+            'amenities.group',
+            'conditions.group',
+        ]);
     } 
 }

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KoomehProperty extends Model implements Authenticatable, HasMedia
 {   
-    // use InteractsWithFragments;
+    use InteractsWithFragments;
     use InteractsWithMedia;
     // use InteractsWithWidgets;
     use InteractsWithTargomaan;  
@@ -29,6 +29,94 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
      */
     public const TRANSLATION_MODEL = Translation::class;
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'guests', 'images'
+    ];
+
+    /**
+     * Get calculated guests.
+     * 
+     * @return integer
+     */
+    public function getGuestsAttribute()
+    {
+        return $this->adult + $this->children + $this->infant;
+    } 
+
+    /**
+     * Get calculated gallery images.
+     * 
+     * @return integer
+     */
+    public function getImagesAttribute()
+    {
+        return $this->getMedia('gallery')->map(function($media) { 
+            return collect($media->getGeneratedConversions())->map(function($value, $conversion) { 
+                return $this->getFirstMediaUrl('gallery', $conversion);
+            });
+        });
+    }
+
+    /**
+     * Get availalbe amenities.
+     * 
+     * @return integer
+     */
+    public function getAvailableDetailsAttribute()
+    {
+        return $this->groupedAmenities()->get('boolean');
+    }
+
+    /**
+     * Get countable amenities.
+     * 
+     * @return integer
+     */
+    public function getCountableDetailsAttribute()
+    {
+        return $this->groupedAmenities()->get('number');
+    }
+
+    /**
+     * Get descriptive amenities.
+     * 
+     * @return integer
+     */
+    public function getDescriptiveDetailsAttribute()
+    {
+        return $this->groupedAmenities()->get('text');
+    }
+
+    /**
+     * Get grouped amenities.
+     * 
+     * @return integer
+     */
+    public function groupedAmenities()
+    {
+        return $this->amenities->groupBy('field')->map(function($amenities) {
+            return $amenities->map(function($amenity) {
+                return [
+                    'name' => $amenity->name,
+                    'help' => $amenity->help,
+                    'group'=> data_get($amenity, 'group.name'),
+                    'icon' => $amenity->icon,
+                    'value'=> data_get($amenity, 'pivot.value'),
+                ];
+            });
+        });
+    }
+
+    /**
+     * Get available property statuses.
+     * 
+     * @return array
+     */
     public static function statuses()
     {
         return [
@@ -157,7 +245,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
      */
     public function cypressFragment(): string
     {
-        return \Armincms\Koomeh\Cypress\Fragments\Category::class;
+        return \Armincms\Koomeh\Cypress\Fragments\Property::class;
     }
 
     /**
@@ -186,11 +274,17 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
      */
     public function serializeForWidget($request): array
     { 
-        return array_merge($this->toArray(), $this->getFirstMediasWithConversions()->toArray(), [
+        return array_merge($this->toArray(), [
             'creation_date' => $this->created_at->format('Y F d'),
             'last_update'   => $this->updated_at->format('Y F d'),
             'author'=> $this->auth->fullname(), 
             'url'   => $this->getUrl($request),
+            'availableDetails'  => $this->groupedAmenities()->get('boolean'), 
+            'countableDetails'  => $this->groupedAmenities()->get('number'), 
+            'descriptiveDetails'=> $this->groupedAmenities()->get('text'),
+            'stateName' => optional($this->state)->name,
+            'cityName' => optional($this->city)->name,
+            'zoneName' => optional($this->zone)->name,
         ]);
     }
 

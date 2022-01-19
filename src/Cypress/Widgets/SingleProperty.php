@@ -1,14 +1,14 @@
 <?php
 
 namespace Armincms\Koomeh\Cypress\Widgets;
- 
+  
 use Laravel\Nova\Fields\Select;
 use Zareismail\Cypress\Widget;  
 use Zareismail\Cypress\Http\Requests\CypressRequest;
 use Zareismail\Gutenberg\Gutenberg;
 use Zareismail\Gutenberg\HasTemplate;
 
-abstract class Single extends Widget
+class SingleProperty extends Widget
 {       
     use HasTemplate;
 
@@ -66,18 +66,13 @@ abstract class Single extends Widget
     public static function fields($request)
     {
         return [
-            Select::make(__('Display Blog Template'), 'config->template')
-                ->options(static::availableTemplates(static::templateName()))
+            Select::make(__('Display Property Template'), 'config->template')
+                ->options(static::availableTemplates(
+                    \Armincms\Koomeh\Gutenberg\Templates\SingleProperty::class
+                ))
                 ->displayUsingLabels()
                 ->required()
                 ->rules('required'),
         ];
-    }
-
-    /**
-     * Get the template name.
-     * 
-     * @return string
-     */
-    abstract public static function templateName(): string;
+    }   
 }
