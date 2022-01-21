@@ -139,11 +139,7 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function menus()
     {    
         $this->app->booted(function() {  
-            $menus = array_unique(array_merge((array) config('nova-menu.menu_item_types'), [
-                Menus\Article::class,
-                Menus\Podcast::class,
-                Menus\Post::class,
-                Menus\Video::class,
+            $menus = array_unique(array_merge((array) config('nova-menu.menu_item_types'), [ 
             ]));
 
             app('config')->set('nova-menu.menu_item_types', $menus);  
