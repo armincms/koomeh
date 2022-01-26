@@ -3,6 +3,7 @@
 namespace Armincms\Koomeh\Nova;
  
 use Armincms\Contract\Nova\Fields; 
+use Armincms\Contract\Nova\Localization; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str; 
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -11,6 +12,7 @@ use Laravel\Nova\Resource as NovaResource;
 abstract class Resource extends NovaResource
 {  
     use Fields;
+    use Localization;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
