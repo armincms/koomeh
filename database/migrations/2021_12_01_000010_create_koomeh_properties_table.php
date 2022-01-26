@@ -16,9 +16,9 @@ class CreateKoomehPropertiesTable extends Migration
         Schema::create('koomeh_properties', function (Blueprint $table) {
             $table->id(); 
             $table->unsignedTinyInteger('minimum_reservation')->default(1); 
-            $table->unsignedTinyInteger('adult')->default(1);
-            $table->unsignedTinyInteger('children')->default(0);
-            $table->unsignedTinyInteger('infant')->default(0);
+            $table->unsignedTinyInteger('accommodation')->default(1);
+            $table->unsignedTinyInteger('max_accommodation')->default(1); 
+            $table->integer('max_accommodation_payment')->default(100); 
             $table->string('code')->unique()->index();
             $table->string('marked_as')->index()->default('draft');
             $table->string('lat')->nullable();

@@ -26,13 +26,11 @@ class SingleProperty extends Template
 
             Variable::make('url', __('Property URL')),
 
-            Variable::make('guests', __('Property Guests Capacity')),
+            Variable::make('accommodation', __('Actual property accommodation space')),
 
-            Variable::make('adult', __('Property Adults Capacity')),
+            Variable::make('max_accommodation', __('Extra property accommodation space')),
             
-            Variable::make('children', __('Property Childrens Capacity')),
-            
-            Variable::make('infant', __('Property Infants Capacity')),
+            Variable::make('max_accommodation_payment', __('Additional cost per guest by percent')), 
 
             Variable::make('images', __(
                 "Property gallery image list. available conversions is:[{$conversions}]"

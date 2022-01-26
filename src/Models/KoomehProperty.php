@@ -35,18 +35,8 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
      * @var array
      */
     protected $appends = [
-        'guests', 'images'
-    ];
-
-    /**
-     * Get calculated guests.
-     * 
-     * @return integer
-     */
-    public function getGuestsAttribute()
-    {
-        return $this->adult + $this->children + $this->infant;
-    } 
+        'images'
+    ]; 
 
     /**
      * Get calculated gallery images.

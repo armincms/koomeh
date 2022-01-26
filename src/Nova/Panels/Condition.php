@@ -53,23 +53,27 @@ class Condition extends Panel
         ]); 
 
         return parent::prepareFields(array_merge([
-            Number::make(__('Adult Guests'), 'adult')
+            Number::make(__('Standard Capacity'), 'accommodation')
                 ->default(1)
                 ->min(0)
                 ->required()
-                ->rules('required', 'min:0'),
+                ->rules('required', 'min:1')
+                ->help(__('Actual property accommodation space')),
 
-            Number::make(__('Children Guests'), 'children')
-                ->default(0)
+            Number::make(__('Maximum Capacity'), 'max_accommodation')
+                ->default(1)
                 ->min(0)
                 ->required()
-                ->rules('required', 'min:0'),
+                ->rules('required', 'gte:accommodation')
+                ->help(__('Extra property accommodation space')),
 
-            Number::make(__('Infant Guests'), 'infant')
-                ->default(0)
+            Number::make(__('Additional cost (%)'), 'max_accommodation_payment')
+                ->default(100)
                 ->min(0)
+                ->max(100)
                 ->required()
-                ->rules('required', 'min:0'),
+                ->rules('required', 'min:0', 'max:100')
+                ->help(__('Additional cost per guest by percent')), 
         ], $fields->toArray()));
     }
 }
