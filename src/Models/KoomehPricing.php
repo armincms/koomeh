@@ -11,6 +11,16 @@ class KoomehPricing extends Model
 	 */
 	public function properties()
 	{
-		return $this->belongsToMany(KoomehPricing::class, 'koomeh_pricing_property');
+		return $this->belongsToMany(KoomehProperty::class, 'koomeh_pricing_property');
+	} 
+
+	/**
+	 * Query related KoomehVacation.
+	 * 
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function vacations()
+	{
+		return $this->belongsToMany(KoomehVacation::class, 'koomeh_pricing_vacation');
 	} 
 }

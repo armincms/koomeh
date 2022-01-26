@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKoomehVacationsTable extends Migration
+class CreateKoomehVacationDaysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateKoomehVacationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('koomeh_vacations', function (Blueprint $table) {
-            $table->id();
-            $table->json('name');   
+        Schema::create('koomeh_vacation_days', function (Blueprint $table) {
+            $table->id();      
+            $table->date('start_date');   
+            $table->date('end_date');   
+            $table->foreignId('vacation_id')->constrained('koomeh_vacations'); 
             $table->softDeletes(); 
             $table->timestamps(); 
         });
@@ -28,6 +30,6 @@ class CreateKoomehVacationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('koomeh_vacations');
+        Schema::dropIfExists('koomeh_vacation_days');
     }
 }

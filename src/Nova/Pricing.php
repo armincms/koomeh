@@ -6,6 +6,7 @@ use Armincms\Fields\Targomaan;
 use Illuminate\Http\Request;  
 use Laravel\Nova\Fields\ID;   
 use Laravel\Nova\Fields\Boolean;  
+use Laravel\Nova\Fields\BooleanGroup;  
 use Laravel\Nova\Fields\Text;  
 use Laravel\Nova\Http\Requests\NovaRequest; 
 
@@ -26,12 +27,35 @@ class Pricing extends Resource
      */
     public function fields(Request $request)
     {
+        $vacations = Vacation::newModel()->whereDoesntHave('pricings', function($query) {
+            $query->whereKeyNot($this->id);
+        })->get();
+
         return [ 
             Targomaan::make([
                 Text::make(__('Pricing Name'), 'name')
                     ->required()
                     ->rules('required', 'max:250'),  
             ]),  
+
+            $this->mergeWhen($vacations->isNotEmpty(), function() use ($vacations) {
+                return [ 
+                    BooleanGroup::make(__('Vacations'))
+                        ->options($vacations->pluck('name', 'id')->all())
+                        ->fillUsing(function($request, $model, $attribute, $requestAttribute) {
+                            $vacations = collect(json_decode($request->get($requestAttribute), true));
+
+                            return function() use ($model, $vacations) {
+                                $model->vacations()->sync($vacations->filter()->keys());
+                            };
+                        })
+                        ->resolveUsing(function() {
+                            return $this->vacations->keyBy->getKey()->map(function() {
+                                return true;
+                            });
+                        }),
+                ];
+            }),
 
             $this->merge(function() {
                 $pricings = static::newModel()->get(); 
@@ -42,7 +66,7 @@ class Pricing extends Resource
                     })
                     ->mapInto(Boolean::class)
                     ->toArray();
-            }), 
+            }),  
         ];
     }
 
@@ -79,8 +103,7 @@ class Pricing extends Resource
             'thursday' => __('Thursday'),
             'friday' => __('Friday'),
             'saturday' => __('Saturday'),
-            'sunday' => __('Sunday'),
-            'vacation' => __('Vacation'),
+            'sunday' => __('Sunday'), 
         ];
     }
 

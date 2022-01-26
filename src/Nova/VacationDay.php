@@ -1,22 +1,21 @@
 <?php
 
 namespace Armincms\Koomeh\Nova;
-
-use Armincms\Fields\Targomaan;
+ 
 use Illuminate\Http\Request;    
-use Laravel\Nova\Fields\HasMany;  
 use Laravel\Nova\Fields\ID;  
+use Laravel\Nova\Fields\BelongsTo;  
 use Laravel\Nova\Fields\Text;  
 use Laravel\Nova\Http\Requests\NovaRequest; 
 
-class Vacation extends Resource
+class VacationDay extends Resource
 { 
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \Armincms\Koomeh\Models\KoomehVacation::class;
+    public static $model = \Armincms\Koomeh\Models\KoomehVacationDay::class;
 
     /**
      * Get the fields displayed by the resource.
@@ -27,30 +26,25 @@ class Vacation extends Resource
     public function fields(Request $request)
     {
         return [  
-            Targomaan::make([
-                Text::make(__('Vacation Name'), 'name')
-                    ->required()
-                    ->rules('required', 'max:250'),  
-            ]),   
-
-            HasMany::make(__('Vacation Days'), 'vacationDays', VacationDay::class),
-        ];
-    }
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function fieldsForIndex(Request $request)
-    {
-        return [ 
             ID::make(__('ID'), 'id')->sortable(),
 
-            Text::make(__('Vacation Name'), 'name')->sortable(),  
+            BelongsTo::make(__('Related Vacation'), 'vacation', Vacation::class)
+                ->required()
+                ->rules('required')
+                ->showCreateRelationButton()
+                ->withoutTrashed(),
+
+            $this->dateField(__('Vacation Start'), 'start_date')
+                ->required() 
+                ->min('today')
+                ->rules('required', 'unique:koomeh_vacation_days,start_date,{{resourceId}}'),
+
+            $this->dateField(__('Vacation End'), 'end_date')
+                ->required() 
+                ->min('today')
+                ->rules('required', 'unique:koomeh_vacation_days,end_date,{{resourceId}}'),
         ];
-    }
+    } 
 
     /**
      * Return the location to redirect the user after creation.

@@ -22,8 +22,7 @@ class CreateKoomehPricingsTable extends Migration
             $table->boolean('thursday')->default(false);  
             $table->boolean('friday')->default(false);  
             $table->boolean('saturday')->default(false);  
-            $table->boolean('sunday')->default(false);  
-            $table->boolean('vacation')->default(false);  
+            $table->boolean('sunday')->default(false);     
             $table->softDeletes(); 
             $table->timestamps(); 
         });

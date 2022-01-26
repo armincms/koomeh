@@ -26,6 +26,7 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
         Models\KoomehReservation::class => Policies\Reservation::class, 
         Models\KoomehRoomType::class => Policies\RoomType::class, 
         Models\KoomehVacation::class => Policies\Vacation::class,  
+        Models\KoomehVacationDay::class => Policies\VacationDay::class,  
     ];
 
     /**
@@ -80,6 +81,7 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
             Nova\Reservation::class, 
             Nova\RoomType::class, 
             Nova\Vacation::class, 
+            Nova\VacationDay::class, 
         ]);
     }
 
