@@ -20,7 +20,7 @@ class Condition extends Panel
      */
     protected function prepareFields($fields)
     {
-        $fields = KoomehConditionGroup::with('conditions')->get()->map(function($group) {
+        $fields = KoomehConditionGroup::with('conditions')->get()->toBase()->map(function($group) {
             return BooleanGroup::make($group->name, "conditions[{$group->getKey()}]")
                 ->options($group->conditions->pluck('name', 'id')->all())
                 ->fillUsing(function() { 
