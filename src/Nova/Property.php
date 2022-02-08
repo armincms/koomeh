@@ -46,6 +46,10 @@ class Property extends Resource
     public function fields(Request $request)
     {
         return [
+            $this->when($request->isResourceDetailRequest(), function() {
+                return $this->resourceUrls();
+            }),
+
             Select::make(__('Residence Publish Status'), 'marked_as')
                 ->options(static::statuses())
                 ->required()
