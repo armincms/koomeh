@@ -93,7 +93,7 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function components()
     {  
         Gutenberg::components([
-            Cypress\Blog::class,
+            // Cypress\Blog::class,
         ]);
     }
 
