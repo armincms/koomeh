@@ -5,19 +5,23 @@ namespace Armincms\Koomeh\Cypress\Widgets;
 use Laravel\Nova\Fields\Select;
 use Zareismail\Cypress\Widget;  
 use Zareismail\Cypress\Http\Requests\CypressRequest;
-use Zareismail\Gutenberg\Gutenberg;
-use Zareismail\Gutenberg\HasTemplate;
+use Zareismail\Gutenberg\GutenbergWidget; 
 
-class SingleProperty extends Widget
-{       
-    use HasTemplate;
-
+class SingleProperty extends GutenbergWidget
+{        
     /**
      * Indicates if the widget should be shown on the component page.
      *
      * @var \Closure|bool
      */
     public $showOnComponent = false;
+
+    /**
+     * The logical group associated with the widget.
+     *
+     * @var string
+     */
+    public static $group = 'Property';
 
     /**
      * Bootstrap the resource for the given request.
@@ -28,21 +32,11 @@ class SingleProperty extends Widget
      */
     public function boot(CypressRequest $request, $layout)
     {   
-        $this->bootstrapTemplate($request, $layout);
+        parent::boot($request, $layout);
 
         $this->withMeta([
             'resource' => $request->resolveFragment()->metaValue('resource')
         ]);
-    }
-
-    /**
-     * Get the template id.
-     * 
-     * @return integer
-     */
-    public function getTemplateId(): int
-    {
-        return $this->metaValue('template');
     } 
 
     /**
@@ -50,29 +44,22 @@ class SingleProperty extends Widget
      * 
      * @return array
      */
-    public function serializeForTemplate(): array
-    {
-        $request = $this->getRequest();
-
-        return $request->resolveFragment()->metaValue('resource')->serializeForWidget($request);
+    public function serializeForDisplay(): array
+    { 
+        return $this->metaValue('resource')->serializeForWidget($this->getRequest());
     }
 
     /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * Query related tempaltes.
+     * 
+     * @param  $request [description]
+     * @param  $query   [description]
+     * @return          [description]
      */
-    public static function fields($request)
+    public static function relatableTemplates($request, $query)
     {
-        return [
-            Select::make(__('Display Property Template'), 'config->template')
-                ->options(static::availableTemplates(
-                    \Armincms\Koomeh\Gutenberg\Templates\SingleProperty::class
-                ))
-                ->displayUsingLabels()
-                ->required()
-                ->rules('required'),
-        ];
-    }   
+        return $query->handledBy(
+            \Armincms\Koomeh\Gutenberg\Templates\SingleProperty::class
+        );
+    }
 }
