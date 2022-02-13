@@ -7,7 +7,14 @@ use Zareismail\Gutenberg\Template;
 use Zareismail\Gutenberg\Variable;
 
 class SingleProperty extends Template 
-{       
+{    
+    /**
+     * The logical group associated with the widget.
+     *
+     * @var string
+     */
+    public static $group = 'Property';
+
     /**
      * Register the given variables.
      * 
