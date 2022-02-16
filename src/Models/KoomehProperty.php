@@ -265,9 +265,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
     public function serializeForDetailWidget($request)
     {
         return array_merge($this->toArray(), [
-            'propertyType' => $this->property_type,
-            'roomType' => $this->room_type,
-            'paymentBasis' => $this->payment_basis,
+            'propertyType' => $this->propertyType,
+            'roomType' => $this->roomType,
+            'paymentBasis' => $this->paymentBasis,
             'creation_date' => $this->created_at->format('Y F d'),
             'last_update'   => $this->updated_at->format('Y F d'),
             'author'=> $this->auth->fullname(), 
