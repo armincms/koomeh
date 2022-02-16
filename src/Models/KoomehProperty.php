@@ -275,7 +275,15 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
             'availableDetails'  => $this->groupedAmenities()->get('boolean'), 
             'countableDetails'  => $this->groupedAmenities()->get('number'), 
             'descriptiveDetails'=> $this->groupedAmenities()->get('text'),
-            'details' => $this->amenities->keyBy->getKey->map->toArray(),
+            'details' => $this->amenities->keyBy->getKey()->map(function($amenity) {
+                return [
+                    'name' => $amenity->name,
+                    'help' => $amenity->help,
+                    'group'=> data_get($amenity, 'group.name'),
+                    'icon' => $amenity->icon,
+                    'value'=> data_get($amenity, 'pivot.value'),
+                ];
+            }),
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
