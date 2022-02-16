@@ -93,7 +93,7 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function components()
     {  
         Gutenberg::components([
-            // Cypress\Blog::class,
+            // Cypress\SearchProperty::class,
         ]);
     }
 
@@ -117,6 +117,7 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function widgets()
     {   
         Gutenberg::widgets([ 
+            Cypress\Widgets\FilterProperty::class, 
             Cypress\Widgets\SingleProperty::class, 
         ]);
     }
@@ -129,6 +130,8 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
     protected function templates()
     {   
         Gutenberg::templates([ 
+            \Armincms\Koomeh\Gutenberg\Templates\FilterPropertyWidget::class, 
+            \Armincms\Koomeh\Gutenberg\Templates\IndexProperty::class, 
             \Armincms\Koomeh\Gutenberg\Templates\SingleProperty::class, 
         ]); 
     }

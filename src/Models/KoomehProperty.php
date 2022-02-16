@@ -17,7 +17,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
 {   
     use InteractsWithFragments;
     use InteractsWithMedia;
-    // use InteractsWithWidgets;
+    use InteractsWithWidgets;
     use InteractsWithTargomaan;  
     use SoftDeletes;  
     use Suspendable;  
@@ -254,16 +254,16 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
                 'accepts'   => ['image/jpeg', 'image/jpg', 'image/png'],
             ], 
         ];
-    }
-    
+    } 
+
     /**
-     * Serialize the model for pass into the client view.
+     * Serialize the model to pass into the client view for single item.
      *
      * @param Zareismail\Cypress\Request\CypressRequest
      * @return array
      */
-    public function serializeForWidget($request): array
-    { 
+    public function serializeForDetailWidget($request)
+    {
         return array_merge($this->toArray(), [
             'creation_date' => $this->created_at->format('Y F d'),
             'last_update'   => $this->updated_at->format('Y F d'),
@@ -272,6 +272,34 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
             'availableDetails'  => $this->groupedAmenities()->get('boolean'), 
             'countableDetails'  => $this->groupedAmenities()->get('number'), 
             'descriptiveDetails'=> $this->groupedAmenities()->get('text'),
+            'details' => $this->amenities->keyBy->getKey->map->toArray(),
+            'stateName' => optional($this->state)->name,
+            'cityName' => optional($this->city)->name,
+            'zoneName' => optional($this->zone)->name,
+        ]);
+    }
+
+    /**
+     * Serialize the model to pass into the client view for collection of items.
+     *
+     * @param Zareismail\Cypress\Request\CypressRequest
+     * @return array
+     */
+    public function serializeForIndexWidget($request)
+    {
+        return array_merge($this->toArray(), [
+            'creation_date' => $this->created_at->format('Y F d'),
+            'last_update'   => $this->updated_at->format('Y F d'), 
+            'url'   => $this->getUrl($request), 
+            'details' => $this->amenities->keyBy->getKey()->map(function($amenity) {
+                return [
+                    'name' => $amenity->name,
+                    'help' => $amenity->help,
+                    'group'=> data_get($amenity, 'group.name'),
+                    'icon' => $amenity->icon,
+                    'value'=> data_get($amenity, 'pivot.value'),
+                ];
+            })->toArray(),
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,

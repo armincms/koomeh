@@ -14,7 +14,8 @@
         "armincms/location": "^2.0", 
         "armincms/nova-targomaan": "^1.0", 
         "armincms/markable": "^0.1",  
-        "whitecube/nova-flexible-content": "^0.2" 
+        "whitecube/nova-flexible-content": "^0.2", 
+        "optimistdigital/nova-multiselect-field": "^2.3"
     },
     "autoload": {
         "psr-4": {
