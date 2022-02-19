@@ -50,7 +50,7 @@ class FilterProperty extends GutenbergWidget
             return $template->gutenbergTemplate($attributes)->render();
         }, Property::class);  
 
-        $this->when($this->metaValue('pagination'), function() { 
+        $this->when($this->metaValue('pagination'), function() use ($request, $layout) { 
             $template = $this->bootstrapTemplate($request, $layout, $this->metaValue('pagination'));
      
             $this->displayResourceUsing(function($attributes) use ($template) {   
