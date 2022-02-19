@@ -206,12 +206,12 @@ class FilterProperty extends GutenbergWidget
         $properties = Property::newModel()
             ->tap($queryCallback)
             ->when($this->metaValue('direction') === 'asc', function($query) {
-                $query->latest($this->metaValue('ordering'));
+                return $query->latest($this->metaValue('ordering'));
             }, function($query) { 
-                $query->oldest($this->metaValue('ordering'));
+                return $query->oldest($this->metaValue('ordering'));
             })
             ->when($this->metaValue('pagination'), function($query) {
-                $query->paginate($this->metaValue('per_page'));
+                return $query->paginate($this->metaValue('per_page'));
             }, function($query) {
                 return $query->simplePaginate($this->metaValue('per_page'), ['*'], $this->name);
             });
