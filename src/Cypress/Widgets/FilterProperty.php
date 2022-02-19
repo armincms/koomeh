@@ -165,13 +165,13 @@ class FilterProperty extends GutenbergWidget
                     $query->where('name', 'like', $this->getSearchString());
                 });
                 $query->orWhereHas('state', function($query) {
-                    $query->where('name', 'like', $this->getSearchString());
+                    $query->where('name->'. app()->getLocale(), 'like', $this->getSearchString());
                 });
                 $query->orWhereHas('city', function($query) {
-                    $query->where('name', 'like', $this->getSearchString());
+                    $query->where('name->'. app()->getLocale(), 'like', $this->getSearchString());
                 });
                 $query->orWhereHas('zone', function($query) {
-                    $query->where('name', 'like', $this->getSearchString());
+                    $query->where('name->'. app()->getLocale(), 'like', $this->getSearchString());
                 });
             });
 
