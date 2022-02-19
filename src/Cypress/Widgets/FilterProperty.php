@@ -12,6 +12,7 @@ use Armincms\Koomeh\Nova\Reservation;
 use Armincms\Koomeh\Nova\RoomType; 
 use Armincms\Koomeh\Gutenberg\Templates\IndexProperty; 
 use Armincms\Location\Nova\City;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;   
 use OptimistDigital\MultiselectField\Multiselect;
@@ -49,11 +50,15 @@ class FilterProperty extends GutenbergWidget
             return $template->gutenbergTemplate($attributes)->render();
         }, Property::class);  
 
-        $template = $this->bootstrapTemplate($request, $layout, $this->metaValue('pagination'));
- 
-        $this->displayResourceUsing(function($attributes) use ($template) {   
-            return $template->gutenbergTemplate($attributes)->render();
-        }, 'pagination');  
+        $this->when($this->metaValue('pagination'), function() { 
+            $template = $this->bootstrapTemplate($request, $layout, $this->metaValue('pagination'));
+     
+            $this->displayResourceUsing(function($attributes) use ($template) {   
+                return $template->gutenbergTemplate($attributes)->render();
+            }, 'pagination'); 
+        }, function() { 
+            $this->displayResourceUsing(function($attributes) { }, 'pagination'); 
+        });
     } 
 
     /**
@@ -68,8 +73,10 @@ class FilterProperty extends GutenbergWidget
             Select::make(__('Display Pagination By'), 'config->pagination')
                 ->options(Gutenberg::cachedTemplates()->forHandler(Pagination::class)->keyBy->getKey()->map->name)  
                 ->displayUsingLabels()
-                ->required()
-                ->rules('required'), 
+                ->nullable()
+                ->withMeta([
+                    'placeholder' => __('Display only one page')
+                ]), 
 
             Select::make(__('Display Properties By'), 'config->'. Property::uriKey())
                 ->options(Gutenberg::cachedTemplates()->forHandler(IndexProperty::class)->keyBy->getKey()->map->name)
@@ -135,6 +142,9 @@ class FilterProperty extends GutenbergWidget
                 ->required()
                 ->rules('required', 'min:1')
                 ->help(__('Number of items that should be display on each page.')),  
+
+            Boolean::make(__('Searchable'), 'config->searchable')
+                ->help(__('Determine if should filter when search string appears in the request.')), 
         ];
     } 
 
@@ -145,16 +155,61 @@ class FilterProperty extends GutenbergWidget
      */
     public function serializeForDisplay(): array
     { 
-        $properties = Property::newModel()->with([
-            'propertyType', 
-            'media',
-            'state',
-            'city',
-            'zone',
-            'amenities' => function($query) {
-                $query->whereKey((array) $this->metaValue('details'));
-            }
-        ])->paginate($this->metaValue('per_page'));
+        $queryCallback = function($query) {
+            $query->unless($this->metaValue('pagination'), function($query) {
+                $query->limit($this->metaValue('per_page'));
+            });
+
+            $query->when($this->metaValue('searchable') && request()->query('search'), function($query) { 
+                $query->whereHas('translations', function($query) {
+                    $query->where('name', 'like', $this->getSearchString());
+                });
+                $query->orWhereHas('state', function($query) {
+                    $query->where('name', 'like', $this->getSearchString());
+                });
+                $query->orWhereHas('city', function($query) {
+                    $query->where('name', 'like', $this->getSearchString());
+                });
+                $query->orWhereHas('zone', function($query) {
+                    $query->where('name', 'like', $this->getSearchString());
+                });
+            });
+
+            $query->when($this->metaValue('propertyType'), function($query) {
+                $query->whereKey($this->metaValue('propertyType'));
+            });
+
+            $query->when($this->metaValue('roomType'), function($query) {
+                $query->whereKey($this->metaValue('roomType'));
+            });
+
+            $query->when($this->metaValue('reservation'), function($query) {
+                $query->whereKey($this->metaValue('reservation'));
+            });
+
+            $query->when($this->metaValue('city'), function($query) {
+                $query->whereKey((array) $this->metaValue('city'));
+            });
+
+            $query->with([
+                'propertyType', 
+                'media',
+                'state',
+                'city',
+                'zone',
+                'amenities' => function($query) {
+                    $query->whereKey((array) $this->metaValue('details'));
+                }
+            ]);
+        };
+
+        $properties = Property::newModel()
+            ->tap($queryCallback)
+            ->when($this->metaValue('pagination'), function($query) {
+                $query->paginate($this->metaValue('per_page'));
+            }, function($query) {
+                return $query->simplePaginate($this->metaValue('per_page'), ['*'], $this->name);
+            });
 
         return [
             'items' => $properties->getCollection()->map(function($property) {
@@ -180,5 +235,12 @@ class FilterProperty extends GutenbergWidget
         return $query->handledBy(
             \Armincms\Koomeh\Gutenberg\Templates\FilterPropertyWidget::class
         );
+    }
+
+    public function getSearchString()
+    {
+        $searchString = trim(trim(request()->query('search'), '%'));
+
+        return "%{$searchString}%";
     }
 }
