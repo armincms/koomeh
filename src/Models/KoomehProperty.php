@@ -12,8 +12,9 @@ use Armincms\Targomaan\Concerns\InteractsWithTargomaan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Database\Eloquent\SoftDeletes;  
+use Zareismail\NovaPolicy\Contracts\Ownable;
 
-class KoomehProperty extends Model implements Authenticatable, HasMedia
+class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 {   
     use InteractsWithFragments;
     use InteractsWithMedia;
@@ -116,6 +117,16 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia
             'pending'   => __('Awaiting approval'),
             'published'   => __('Published on website'),
         ];
+    }
+
+    /**
+     * Indicate Model Authenticatable.
+     * 
+     * @return mixed
+     */
+    public function owner()
+    {
+        return $this->auth();
     }
 
     /**
