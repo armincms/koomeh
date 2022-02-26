@@ -98,7 +98,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     public function groupedAmenities($request)
     {
-        return $this->amenities->groupBy('field')->map->serializeForWidget($request);
+        return $this->amenities->groupBy('field')->map->map->serializeForWidget($request);
     }
 
     /**
@@ -281,11 +281,14 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'last_update'   => $this->updated_at->format('Y F d'),
             'author'=> $this->auth->fullname(), 
             'url'   => $this->getUrl($request),
-            'availableDetails'  => $this->getAvailableDetailsAttribute($request)->get('boolean'), 
-            'countableDetails'  => $this->getCountableDetailsAttribute($request)->get('number'), 
-            'descriptiveDetails'=> $this->getDescriptiveDetailsAttribute($request)->get('text'),
+            'availableDetails'  => $this->getAvailableDetailsAttribute($request), 
+            'countableDetails'  => $this->getCountableDetailsAttribute($request), 
+            'descriptiveDetails'=> $this->getDescriptiveDetailsAttribute($request),
             'details' => $this->amenities->keyBy->getKey()->map->serializeForWidget($request),
-            'groupedDetails' => $this->amenities->map->serializeForWidget($request)->groupBy('group'),
+            'groupedDetails' => $this->amenities->groupBy('group_id')
+                ->map(function($grouped) use ($request) {
+                    return $grouped->map->serializeForWidget($request);
+                }),
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
