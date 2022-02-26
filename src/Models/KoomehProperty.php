@@ -58,13 +58,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     public function getImagesAttribute()
     {
-        return $this->getMedia('gallery')->map(function($media) { 
-            return collect($media->getGeneratedConversions())->map(function($value, $conversion) use ($media) { 
-                return $media->hasGeneratedConversion($conversion)
-                    ? $media->getUrl($conversion)
-                    : $this->getUrl();
-            });
-        });
+        return $this->getMediasWithConversions()->get('gallery');
     }
 
     /**
