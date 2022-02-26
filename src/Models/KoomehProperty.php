@@ -98,7 +98,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     public function groupedAmenities($request)
     {
-        return $this->amenities->groupBy('field')->map->map->serializeForWidget($request);
+        return $this->amenities->groupBy('field')->map(function($amenities) use ($request) {
+            return $amenities->map->serializeForWidget($request);
+        });
     }
 
     /**
@@ -278,8 +280,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'roomType' => $this->roomType,
             'paymentBasis' => $this->paymentBasis,
             'creation_date' => $this->created_at->format('Y F d'),
-            'last_update'   => $this->updated_at->format('Y F d'),
-            'author'=> $this->auth->fullname(), 
+            'last_update'   => $this->updated_at->format('Y F d'), 
             'url'   => $this->getUrl($request),
             'availableDetails'  => $this->getAvailableDetailsAttribute($request), 
             'countableDetails'  => $this->getCountableDetailsAttribute($request), 
@@ -292,6 +293,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
+            'host' => $this->auth->serializeForWidget($request),
         ]);
     }
 
