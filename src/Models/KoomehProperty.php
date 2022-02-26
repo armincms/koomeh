@@ -40,6 +40,18 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     ]; 
 
     /**
+     * Perform any actions required after the model boots.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::saving(function($model) {
+            $model->code ?? $model->fillPropertyCode();
+        });
+    }
+
+    /**
      * Get calculated gallery images.
      * 
      * @return integer
@@ -387,6 +399,32 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     {
         return $query->whereCode($code);
     }
+
+    /**
+     * Fill the `code` attribute of model.
+     * 
+     * @return static
+     */
+    public function fillPropertyCode()
+    { 
+        return $this->forceFill([
+            'code' => static::generateNewCode(),
+        ]);
+    } 
+
+    /**
+     * Genereate new code for property
+     * 
+     * @return string
+     */
+    public static function generateNewCode()
+    { 
+        while (static::withCode($code = time())->first()) {
+            $code = time();
+        }
+
+        return $code;
+    } 
 
     /**
      * Query where authenticated.

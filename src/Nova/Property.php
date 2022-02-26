@@ -83,12 +83,7 @@ class Property extends Resource
 
             Text::make(__('Property Code'), 'code')
                 ->help(__('Leave blank to auto generate.'))
-                ->rules('nullable', 'unique:koomeh_properties,code,{{resourceId}}')
-                ->fillUsing(function($request, $model, $requestAttribute, $attribute) { 
-                    $model->forceFill([
-                        $attribute => $request->get($requestAttribute) ?? static::generateNewCode()
-                    ]);
-                }),
+                ->rules('nullable', 'unique:koomeh_properties,code,{{resourceId}}'),
 
             Targomaan::make([ 
                 Textarea::make(__('Describe your property'), 'summary')
@@ -144,21 +139,7 @@ class Property extends Resource
 
             BelongsTo::make(__('Residence Host'), 'auth', Host::class),
         ];
-    } 
-
-    /**
-     * Genereate new code for property
-     * 
-     * @return string
-     */
-    public static function generateNewCode()
-    {
-        while (static::newModel()->withCode($code = time())->first()) {
-            $code = time();
-        }
-
-        return $code;
-    } 
+    }   
 
     /**
      * Genereate new code for property
