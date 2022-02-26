@@ -66,9 +66,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      * 
      * @return integer
      */
-    public function getAvailableDetailsAttribute()
+    public function getAvailableDetailsAttribute($request)
     {
-        return $this->groupedAmenities()->get('boolean');
+        return $this->groupedAmenities($request)->get('boolean');
     }
 
     /**
@@ -76,9 +76,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      * 
      * @return integer
      */
-    public function getCountableDetailsAttribute()
+    public function getCountableDetailsAttribute($request)
     {
-        return $this->groupedAmenities()->get('number');
+        return $this->groupedAmenities($request)->get('number');
     }
 
     /**
@@ -86,9 +86,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      * 
      * @return integer
      */
-    public function getDescriptiveDetailsAttribute()
+    public function getDescriptiveDetailsAttribute($request)
     {
-        return $this->groupedAmenities()->get('text');
+        return $this->groupedAmenities($request)->get('text');
     }
 
     /**
@@ -96,19 +96,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      * 
      * @return integer
      */
-    public function groupedAmenities()
+    public function groupedAmenities($request)
     {
-        return $this->amenities->groupBy('field')->map(function($amenities) {
-            return $amenities->map(function($amenity) {
-                return [
-                    'name' => $amenity->name,
-                    'help' => $amenity->help,
-                    'group'=> data_get($amenity, 'group.name'),
-                    'icon' => $amenity->icon,
-                    'value'=> data_get($amenity, 'pivot.value'),
-                ];
-            });
-        });
+        return $this->amenities->groupBy('field')->map->serializeForWidget($request);
     }
 
     /**
@@ -291,18 +281,11 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'last_update'   => $this->updated_at->format('Y F d'),
             'author'=> $this->auth->fullname(), 
             'url'   => $this->getUrl($request),
-            'availableDetails'  => $this->groupedAmenities()->get('boolean'), 
-            'countableDetails'  => $this->groupedAmenities()->get('number'), 
-            'descriptiveDetails'=> $this->groupedAmenities()->get('text'),
-            'details' => $this->amenities->keyBy->getKey()->map(function($amenity) {
-                return [
-                    'name' => $amenity->name,
-                    'help' => $amenity->help,
-                    'group'=> data_get($amenity, 'group.name'),
-                    'icon' => $amenity->icon,
-                    'value'=> data_get($amenity, 'pivot.value'),
-                ];
-            }),
+            'availableDetails'  => $this->groupedAmenities($request)->get('boolean'), 
+            'countableDetails'  => $this->groupedAmenities($request)->get('number'), 
+            'descriptiveDetails'=> $this->groupedAmenities($request)->get('text'),
+            'details' => $this->amenities->keyBy->getKey()->map->serializeForWidget($request),
+            'groupedDetails' => $this->amenities->map->serializeForWidget($request)->groupBy('group'),
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
@@ -321,18 +304,15 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'creation_date' => $this->created_at->format('Y F d'),
             'last_update'   => $this->updated_at->format('Y F d'), 
             'url'   => $this->getUrl($request), 
-            'details' => $this->amenities->keyBy->getKey()->map(function($amenity) {
-                return [
-                    'name' => $amenity->name,
-                    'help' => $amenity->help,
-                    'group'=> data_get($amenity, 'group.name'),
-                    'icon' => $amenity->icon,
-                    'value'=> data_get($amenity, 'pivot.value'),
-                ];
-            })->toArray(),
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
+            'propertyType' => $this->propertyType,
+            'roomType' => $this->roomType,
+            'details' => $this->amenities
+                            ->keyBy->getKey()
+                            ->map->serializeForWidget($request)
+                            ->toArray(),
         ]);
     }
 
