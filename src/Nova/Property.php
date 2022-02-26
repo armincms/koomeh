@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Stack;  
 use Laravel\Nova\Fields\Text;  
 use Laravel\Nova\Fields\Textarea;  
+use Laravel\Nova\Fields\Trix;  
 use Laravel\Nova\Panel;  
 use Laravel\Nova\Http\Requests\NovaRequest;  
 
@@ -86,9 +87,12 @@ class Property extends Resource
                 ->rules('nullable', 'unique:koomeh_properties,code,{{resourceId}}'),
 
             Targomaan::make([ 
-                Textarea::make(__('Describe your property'), 'summary')
+                Textarea::make(__('Summary of property'), 'summary')
                     ->nullable()
                     ->rules('max:250'), 
+
+                Trix::make(__('Describe your property'), 'content')
+                    ->nullable(), 
             ]),
 
             $this->medialibrary(__('Property Gallery'), 'gallery'),
