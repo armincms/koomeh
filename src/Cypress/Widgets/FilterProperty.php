@@ -203,8 +203,8 @@ class FilterProperty extends GutenbergWidget
         };
 
         $properties = Property::newModel()
-            ->tap($queryCallback)
             ->published()
+            ->tap($queryCallback)
             ->when($this->metaValue('direction') === 'asc', function($query) {
                 return $query->latest($this->metaValue('ordering'));
             }, function($query) { 
