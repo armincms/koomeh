@@ -128,10 +128,9 @@ class FilterProperty extends GutenbergWidget
                 ->displayUsingLabels(),
 
             Multiselect::make(__('Display details'), 'config->details')
-                ->options(Amenity::newModel()->with('group')->get()->map(function($amenity) {
+                ->options(Amenity::newModel()->with('group')->get()->keyBy->getKey()->map(function($amenity) {
                     return [
-                        'label' => $amenity->name,
-                        'id' => $amenity->getKey(),
+                        'label' => $amenity->name, 
                         'group' => optional($amenity->group)->name,
                     ];
                 }))->saveAsJSON(),
