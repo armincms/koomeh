@@ -67,13 +67,13 @@ class Condition extends Panel
                 ->rules('required', 'gte:accommodation')
                 ->help(__('Extra property accommodation space')),
 
-            Number::make(__('Additional cost (%)'), 'max_accommodation_payment')
+            Number::make(__('Additional cost'), 'max_accommodation_payment')
                 ->default(100)
                 ->min(0)
                 ->max(100)
                 ->required()
                 ->rules('required', 'min:0', 'max:100')
-                ->help(__('Additional cost per guest by percent')), 
+                ->help(__('Additional cost per guest')), 
         ], $fields->toArray()));
     }
 }
