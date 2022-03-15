@@ -70,7 +70,6 @@ class Condition extends Panel
             Number::make(__('Additional cost'), 'max_accommodation_payment')
                 ->default(100)
                 ->min(0)
-                ->max(100)
                 ->required()
                 ->rules('required', 'min:0', 'max:100')
                 ->help(__('Additional cost per guest')), 
