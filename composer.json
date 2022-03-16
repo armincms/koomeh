@@ -13,7 +13,7 @@
         "armincms/contract": "^1.0", 
         "armincms/location": "^2.0", 
         "armincms/nova-targomaan": "^1.0", 
-        "armincms/markable": "^0.1",  
+        "armincms/markable": "^1.0",  
         "whitecube/nova-flexible-content": "^0.2", 
         "optimistdigital/nova-multiselect-field": "^2.3"
     },
