@@ -23,4 +23,15 @@ class KoomehVacation extends Model
 	{
 		return $this->belongsToMany(KoomehPricing::class, 'koomeh_pricing_vacation');
 	} 
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new Collections\VacationCollection($models);
+    }
 }

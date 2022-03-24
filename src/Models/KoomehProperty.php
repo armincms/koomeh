@@ -34,12 +34,19 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     public const TRANSLATION_MODEL = Translation::class;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['pricings.vacations.vacationDays'];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
     protected $appends = [
-        'images'
+        'images', 'price'
     ]; 
 
     /**
@@ -62,6 +69,28 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     public function getImagesAttribute()
     {
         return $this->getMediasWithConversions()->get('gallery');
+    }
+
+    /**
+     * Get calculated price.
+     * 
+     * @return float
+     */
+    public function getPriceAttribute()
+    {
+        return floatval(data_get($this->pricing, 'pivot.amount', 0.00));
+    }
+
+    /**
+     * Get applied pricing.
+     * 
+     * @return float
+     */
+    public function getPricingAttribute()
+    {
+        return once(function() {
+            return $this->pricings->findForPresent();
+        });
     }
 
     /**
@@ -297,6 +326,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
             'host' => $this->auth->serializeForWidget($request),
+            'pricing' => optional($this->pricing)->name,
         ]);
     }
 
@@ -317,6 +347,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'zoneName' => optional($this->zone)->name,
             'propertyType' => $this->propertyType,
             'roomType' => $this->roomType,
+            'pricing' => optional($this->pricing)->name,
             'details' => $this->amenities
                             ->keyBy->getKey()
                             ->map->serializeForWidget($request)

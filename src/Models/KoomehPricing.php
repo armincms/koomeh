@@ -23,4 +23,28 @@ class KoomehPricing extends Model
 	{
 		return $this->belongsToMany(KoomehVacation::class, 'koomeh_pricing_vacation');
 	} 
+
+	/**
+	 * Determin if corresponce column of today is 1.
+	 * 
+	 * @param  string $value 
+	 * @return boolean        
+	 */
+    public function isAvailableForToday($value='')
+    {
+    	$today = strtolower(now()->format('l'));
+
+    	return $this->{$today} === 1;
+    }
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+    	return new Collections\PricingCollection($models);
+    }
 }

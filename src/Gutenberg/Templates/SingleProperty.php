@@ -33,6 +33,10 @@ class SingleProperty extends Template
 
             Variable::make('url', __('Property URL')),
 
+            Variable::make('price', __('Property price amount')),
+
+            Variable::make('pricing', __('Name of the applied pricing')),
+
             Variable::make('accommodation', __('Actual property accommodation space')),
 
             Variable::make('max_accommodation', __('Extra property accommodation space')),

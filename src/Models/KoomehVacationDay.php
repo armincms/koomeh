@@ -23,4 +23,25 @@ class KoomehVacationDay extends Model
     {
         return $this->belongsTo(KoomehVacation::class);
     }
+
+    /**
+     * Determine if includes current date.
+     * 
+     * @return boolean
+     */
+    public function includesPresent(): bool
+    {
+        return now()->between($this->start_date, $this->end_date, true);        
+    }
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new Collections\VacationDayCollection($models);
+    }
 }
