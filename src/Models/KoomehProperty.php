@@ -2,11 +2,13 @@
 
 namespace Armincms\Koomeh\Models;
   
+use Armincms\Contract\Concerns\HasHits;
 use Armincms\Contract\Concerns\InteractsWithFragments;
 use Armincms\Contract\Concerns\InteractsWithMedia;
 use Armincms\Contract\Concerns\InteractsWithWidgets;
 use Armincms\Contract\Contracts\Authenticatable;
 use Armincms\Contract\Contracts\HasMedia;
+use Armincms\Contract\Contracts\Hitsable;
 use Armincms\Markable\Suspendable;
 use Armincms\Targomaan\Concerns\InteractsWithTargomaan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,8 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;  
 use Zareismail\NovaPolicy\Contracts\Ownable;
 
-class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
+class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable, Hitsable
 {   
+    use HasHits;
     use InteractsWithFragments;
     use InteractsWithMedia;
     use InteractsWithWidgets;
