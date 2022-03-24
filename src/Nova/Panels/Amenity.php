@@ -31,7 +31,7 @@ class Amenity extends Panel
             } 
 
             $fillUsing = function($request, $model, $attribute, $requestAttribute) use ($amenity) {
-                if ($value = $request->get($requestAttribute) || $amenity->field == 'number') {
+                if ($value = $request->get($requestAttribute)) {
                     return function() use ($model, $value, $amenity) {
                         $model->amenities()->attach($amenity->getKey(), compact('value'));
                     };
