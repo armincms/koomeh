@@ -159,7 +159,11 @@ class FilterProperty extends GutenbergWidget
                 $query->limit($this->metaValue('per_page'));
             });
 
-            $query->when($this->metaValue('searchable') && request()->query('search'), function($query) { 
+            $query->where(function($query) { 
+                if (! $this->metaValue('searchable') || ! request()->query('search')) {
+                    return;
+                }
+
                 $query->whereHas('translations', function($query) {
                     $query->where('name', 'like', $this->getSearchString());
                 });
@@ -171,23 +175,25 @@ class FilterProperty extends GutenbergWidget
                 });
                 $query->orWhereHas('zone', function($query) {
                     $query->where('name->'. app()->getLocale(), 'like', $this->getSearchString());
+                }); 
+            });
+
+            $query->where(function($query) { 
+                $query->when($this->metaValue('propertyType'), function($query) {
+                    $query->where('property_type_id', $this->metaValue('propertyType'));
                 });
-            });
 
-            $query->when($this->metaValue('propertyType'), function($query) {
-                $query->whereKey($this->metaValue('propertyType'));
-            });
+                $query->when($this->metaValue('roomType'), function($query) {
+                    $query->where('room_type_id', $this->metaValue('roomType'));
+                });
 
-            $query->when($this->metaValue('roomType'), function($query) {
-                $query->whereKey($this->metaValue('roomType'));
-            });
+                $query->when($this->metaValue('reservation'), function($query) {
+                    $query->where('reservation_id', $this->metaValue('reservation'));
+                });
 
-            $query->when($this->metaValue('reservation'), function($query) {
-                $query->whereKey($this->metaValue('reservation'));
-            });
-
-            $query->when($this->metaValue('city'), function($query) {
-                $query->whereKey((array) $this->metaValue('city'));
+                $query->when($this->metaValue('city'), function($query) {
+                    $query->where('city_id', (array) $this->metaValue('city'));
+                }); 
             });
 
             $query->with([
