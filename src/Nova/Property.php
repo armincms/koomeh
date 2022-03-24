@@ -86,6 +86,10 @@ class Property extends Resource
                 ->help(__('Leave blank to auto generate.'))
                 ->rules('nullable', 'unique:koomeh_properties,code,{{resourceId}}'),
 
+            Number::make(__('Property Hits'), function() {
+                return $this->hits;
+            }),
+
             Targomaan::make([ 
                 Textarea::make(__('Summary of property'), 'summary')
                     ->nullable()
