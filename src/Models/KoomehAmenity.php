@@ -38,6 +38,8 @@ class KoomehAmenity extends Model
             'group'=> data_get($this, 'group.name'),
             'icon' => $this->icon,
             'value'=> data_get($this, 'pivot.value'),
+            'required'=> $this->required,
+            'group_id'=> data_get($this, 'group.id'),
         ];
 	}
 }
