@@ -59,6 +59,15 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
         static::saving(function($model) {
             $model->code ?? $model->fillPropertyCode();
         });
+
+        static::deleting(function($model) {
+            if ($model->isForceDeleting()) { 
+                $model->translations()->delete();
+                $model->amenities()->sync([]);
+                $model->conditions()->sync([]);
+                $model->pricings()->sync([]);
+            }
+        });
     }
 
     /**
