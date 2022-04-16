@@ -7,6 +7,7 @@ use Armincms\Contract\Gutenberg\Widgets\BootstrapsTemplate;
 use Armincms\Contract\Gutenberg\Widgets\ResolvesDisplay; 
 use Armincms\Koomeh\Nova\Amenity;  
 use Armincms\Koomeh\Nova\Property;  
+use Armincms\Koomeh\Nova\PropertyLocality;  
 use Armincms\Koomeh\Nova\PropertyType;  
 use Armincms\Koomeh\Nova\Reservation; 
 use Armincms\Koomeh\Nova\RoomType; 
@@ -103,6 +104,10 @@ class FilterProperty extends GutenbergWidget
                 ->rules('required')
                 ->default('asc'), 
 
+            Select::make(__('Filter by locality'), 'config->propertyLocality')
+                ->options(PropertyLocality::newModel()->get()->keyBy->getKey()->map->name)
+                ->nullable(),
+
             Select::make(__('Filter by type'), 'config->propertyType')
                 ->options(PropertyType::newModel()->get()->keyBy->getKey()->map->name)
                 ->nullable(),
@@ -179,6 +184,9 @@ class FilterProperty extends GutenbergWidget
             });
 
             $query->where(function($query) { 
+                $query->when($this->metaValue('propertyLocality'), function($query) {
+                    $query->where('property_locality_id', $this->metaValue('propertyLocality'));
+                });
                 $query->when($this->metaValue('propertyType'), function($query) {
                     $query->where('property_type_id', $this->metaValue('propertyType'));
                 });
@@ -197,6 +205,7 @@ class FilterProperty extends GutenbergWidget
             });
 
             $query->with([
+                'propertyLocality', 
                 'propertyType', 
                 'media',
                 'state',

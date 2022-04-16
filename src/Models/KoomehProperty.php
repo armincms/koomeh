@@ -179,6 +179,16 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     }
 
     /**
+     * Query related KoomehPropertyLocality.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function propertyLocality()
+    {
+        return $this->belongsTo(KoomehPropertyLocality::class);
+    }
+
+    /**
      * Query related KoomehPropertyType.
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

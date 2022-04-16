@@ -32,6 +32,7 @@ class Property extends Fragment implements Resolvable
         return $query->unless(\Auth::guard('admin')->check(), function($query) {
             return $query->published();
         })->with([
+            'propertyLocality', 
             'propertyType', 
             'roomType', 
             'paymentBasis', 

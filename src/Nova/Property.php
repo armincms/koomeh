@@ -64,6 +64,12 @@ class Property extends Resource
                 ->showCreateRelationButton()
                 ->withoutTrashed(), 
 
+            BelongsTo::make(__('Residence Locality'), 'propertyLocality', PropertyLocality::class)
+                ->required()
+                ->sortable()
+                ->showCreateRelationButton()
+                ->withoutTrashed(),
+
             BelongsTo::make(__('Residence Type'), 'propertyType', PropertyType::class)
                 ->required()
                 ->sortable()
@@ -132,6 +138,7 @@ class Property extends Resource
             $this->resourceUrls(),
  
             Stack::make(__('Residence Detail'), 'property_type_id', [
+                BelongsTo::make(__('Residence Locality'), 'propertyLocality', PropertyLocality::class),
                 BelongsTo::make(__('Residence Type'), 'propertyType', PropertyType::class),
                 BelongsTo::make(__('Accommodation'), 'roomType', RoomType::class),
             ])->sortable(),
