@@ -353,7 +353,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
-            'localityType' => $this->localityType,
+            'propertyLocality' => $this->propertyLocality,
             'propertyType' => $this->propertyType,
             'roomType' => $this->roomType,
             'pricing' => optional($this->pricing)->name,
