@@ -326,26 +326,15 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     public function serializeForDetailWidget($request)
     {
-        return array_merge($this->toArray(), [
-            'propertyType' => $this->propertyType,
-            'roomType' => $this->roomType,
-            'paymentBasis' => $this->paymentBasis,
-            'creation_date' => $this->created_at->format('Y F d'),
-            'last_update'   => $this->updated_at->format('Y F d'), 
-            'url'   => $this->getUrl($request),
+        return array_merge($this->toArray(), $this->serializeForIndexWidget($request), [  
+            'host' => $this->auth->serializeForWidget($request), 
             'availableDetails'  => $this->getAvailableDetailsAttribute($request), 
             'countableDetails'  => $this->getCountableDetailsAttribute($request), 
-            'descriptiveDetails'=> $this->getDescriptiveDetailsAttribute($request),
-            'details' => $this->amenities->keyBy->getKey()->map->serializeForWidget($request),
+            'descriptiveDetails'=> $this->getDescriptiveDetailsAttribute($request), 
             'groupedDetails' => $this->amenities->groupBy('group_id')
                 ->map(function($grouped) use ($request) {
                     return $grouped->map->serializeForWidget($request);
-                }),
-            'stateName' => optional($this->state)->name,
-            'cityName' => optional($this->city)->name,
-            'zoneName' => optional($this->zone)->name,
-            'host' => $this->auth->serializeForWidget($request),
-            'pricing' => optional($this->pricing)->name,
+                }), 
         ]);
     }
 
@@ -364,6 +353,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
+            'localityType' => $this->localityType,
             'propertyType' => $this->propertyType,
             'roomType' => $this->roomType,
             'pricing' => optional($this->pricing)->name,
