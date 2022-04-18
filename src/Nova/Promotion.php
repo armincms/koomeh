@@ -45,6 +45,8 @@ class Promotion extends Resource
 
             $this->currencyField(__('Promotion Cost'))->required(),
 
+            Text::make(__('Promotion Icon'), 'icon')->nullable(),
+
             Boolean::make(__('Active The Promotion'), 'marked_as')
                 ->default(false),
 
