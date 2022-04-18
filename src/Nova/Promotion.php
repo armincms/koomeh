@@ -32,6 +32,10 @@ class Promotion extends Resource
             Targomaan::make([
                 Text::make(__('Promotion Name'), 'name')
                     ->required()
+                    ->rules('required', 'max:250'), 
+
+                Text::make(__('Promotion Tag Label'), 'label')
+                    ->required()
                     ->rules('required', 'max:250'),  
 
                 Text::make(__('Promotion Help'), 'help')

@@ -16,6 +16,7 @@ class CreateKoomehPromotionsTable extends Migration
         Schema::create('koomeh_promotions', function (Blueprint $table) {
             $table->id();
             $table->json('name'); 
+            $table->json('label')->nullable(); 
             $table->json('help')->nullable(); 
             $table->boolean('tagged')->default(false);
             $table->boolean('marked_as')->default(false);
