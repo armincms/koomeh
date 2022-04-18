@@ -5,9 +5,10 @@ namespace Armincms\Koomeh\Cypress\Widgets;
 use Laravel\Nova\Fields\Select;
 use Zareismail\Cypress\Widget;  
 use Zareismail\Cypress\Http\Requests\CypressRequest;
+use Zareismail\Gutenberg\Cacheable; 
 use Zareismail\Gutenberg\GutenbergWidget; 
 
-class SingleProperty extends GutenbergWidget
+class SingleProperty extends GutenbergWidget implements Cacheable
 {        
     /**
      * Indicates if the widget should be shown on the component page.

@@ -19,10 +19,11 @@ use Laravel\Nova\Fields\Select;
 use OptimistDigital\MultiselectField\Multiselect;
 use Whitecube\NovaFlexibleContent\Flexible;
 use Zareismail\Cypress\Http\Requests\CypressRequest;
+use Zareismail\Gutenberg\Cacheable; 
 use Zareismail\Gutenberg\Gutenberg; 
 use Zareismail\Gutenberg\GutenbergWidget; 
 
-class FilterProperty extends GutenbergWidget
+class FilterProperty extends GutenbergWidget implements Cacheable
 {     
     use BootstrapsTemplate;    
     use ResolvesDisplay;   
