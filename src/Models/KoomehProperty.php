@@ -291,6 +291,16 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     }
 
     /**
+     * Query related KoomehPricing.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function promotions()
+    {
+        return $this->belongsToMany(KoomehPromotion::class, 'koomeh_promotion_property');
+    }
+
+    /**
      * Get the corresponding cypress fragment.
      * 
      * @return 
