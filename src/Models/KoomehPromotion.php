@@ -2,12 +2,13 @@
 
 namespace Armincms\Koomeh\Models; 
 
-use Armincms\Markable\Suspendable;
+use Armincms\Contract\Concerns\Configurable;
 use Zareismail\Markable\HasActivation;
 use Zareismail\Markable\Markable;
 
 class KoomehPromotion extends Model  
 {     
+    use Configurable;
     use HasActivation;
     use Markable;
     
