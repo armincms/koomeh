@@ -207,12 +207,14 @@ class FilterProperty extends GutenbergWidget
             $query->with([
                 'propertyLocality', 
                 'propertyType', 
+                'roomType', 
                 'media',
                 'state',
                 'city',
                 'zone',
+                'translations',
                 'amenities' => function($query) {
-                    $query->whereKey((array) $this->metaValue('details'));
+                    $query->whereKey((array) $this->metaValue('details'))->with('group');
                 }
             ]);
         };
