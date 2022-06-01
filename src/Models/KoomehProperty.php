@@ -297,7 +297,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     public function promotions()
     {
-        return $this->belongsToMany(KoomehPromotion::class, 'koomeh_promotion_property');
+        return $this->belongsToMany(KoomehPromotion::class, 'koomeh_promotion_property')->withTimestamps();
     }
 
     /**

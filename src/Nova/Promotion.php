@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;  
 use Laravel\Nova\Fields\BooleanGroup;  
 use Laravel\Nova\Fields\ID;  
+use Laravel\Nova\Fields\Number;  
 use Laravel\Nova\Fields\Text;  
 use Laravel\Nova\Http\Requests\NovaRequest; 
 
@@ -56,6 +57,10 @@ class Promotion extends Resource
 
             BooleanGroup::make(__('Apply promotion on'), 'config->orders')
                 ->options(static::promotionOrders()),
+
+            Number::make(__('Promotion Duration'), 'config->duration')
+                ->default(1)
+                ->help(__('Determine that promotion for a few days can affect the property.')),
 
             BelongsToMany::make(__('Properties'), 'properties', Property::class),
         ];

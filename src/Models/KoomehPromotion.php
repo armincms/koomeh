@@ -3,10 +3,11 @@
 namespace Armincms\Koomeh\Models; 
 
 use Armincms\Contract\Concerns\Configurable;
+use Armincms\Orderable\Contracts\Salable;
 use Zareismail\Markable\HasActivation;
 use Zareismail\Markable\Markable;
 
-class KoomehPromotion extends Model  
+class KoomehPromotion extends Model implements Salable
 {     
     use Configurable;
     use HasActivation;
@@ -19,7 +20,7 @@ class KoomehPromotion extends Model
 	 */
 	public function properties()
 	{
-		return $this->belongsToMany(KoomehProperty::class, 'koomeh_promotion_property');
+		return $this->belongsToMany(KoomehProperty::class, 'koomeh_promotion_property')->withTimestamps();
 	} 
 
     /**
@@ -41,5 +42,55 @@ class KoomehPromotion extends Model
     public function isTagged()
     {
     	return boolval($this->tagged);
+    } 
+
+    /**
+     * Get the sale price currency.
+     * 
+     * @return decimal
+     */
+    public function saleCurrency(): string
+    {
+        return 'IRR';
+    }
+
+    /**
+     * Get the sale price of the item.
+     * 
+     * @return decimal
+     */
+    public function salePrice(): float
+    {
+        return $this->oldPrice();
+    }
+
+    /**
+     * Get the real price of the item.
+     * 
+     * @return decimal
+     */
+    public function oldPrice(): float
+    {
+        return $this->price;
+    }
+
+    /**
+     * Get the item name.
+     * 
+     * @return decimal
+     */
+    public function saleName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the item description.
+     * 
+     * @return decimal
+     */
+    public function saleDescription(): string
+    { 
+        return $this->help;
     }
 }

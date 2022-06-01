@@ -8,13 +8,14 @@
         "koomeh"
     ],
     "license": "MIT",
-    "require": {  
-        "alvinhu/nova-child-select": "^1.0", 
-        "armincms/contract": "^1.0", 
-        "armincms/location": "^2.0", 
-        "armincms/nova-targomaan": "^1.0", 
-        "armincms/markable": "^1.0",  
-        "whitecube/nova-flexible-content": "^0.2", 
+    "require": {
+        "alvinhu/nova-child-select": "^1.0",
+        "armincms/contract": "^1.0",
+        "armincms/location": "^2.0",
+        "armincms/nova-targomaan": "^1.0",
+        "armincms/markable": "^1.0",
+        "armincms/orderable": "^1.0",
+        "whitecube/nova-flexible-content": "^0.2",
         "optimistdigital/nova-multiselect-field": "^2.3"
     },
     "autoload": {
