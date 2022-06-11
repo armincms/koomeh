@@ -3,17 +3,17 @@
 namespace Armincms\Koomeh\Nova;
 
 use Armincms\Fields\Targomaan;
-use Illuminate\Http\Request;    
-use Laravel\Nova\Fields\BelongsToMany;  
-use Laravel\Nova\Fields\Boolean;  
-use Laravel\Nova\Fields\BooleanGroup;  
-use Laravel\Nova\Fields\ID;  
-use Laravel\Nova\Fields\Number;  
-use Laravel\Nova\Fields\Text;  
-use Laravel\Nova\Http\Requests\NovaRequest; 
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BooleanGroup;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Promotion extends Resource
-{ 
+{
     /**
      * The model the resource corresponds to.
      *
@@ -29,20 +29,20 @@ class Promotion extends Resource
      */
     public function fields(Request $request)
     {
-        return [  
+        return [
             Targomaan::make([
                 Text::make(__('Promotion Name'), 'name')
                     ->required()
-                    ->rules('required', 'max:250'), 
+                    ->rules('required', 'max:250'),
 
                 Text::make(__('Promotion Tag Label'), 'label')
                     ->required()
-                    ->rules('required', 'max:250'),  
+                    ->rules('required', 'max:250'),
 
                 Text::make(__('Promotion Help'), 'help')
                     ->required()
-                    ->rules('required', 'max:250'),  
-            ]),   
+                    ->rules('required', 'max:250'),
+            ]),
 
             $this->currencyField(__('Promotion Cost'))->required(),
 
@@ -62,7 +62,12 @@ class Promotion extends Resource
                 ->default(1)
                 ->help(__('Determine that promotion for a few days can affect the property.')),
 
-            BelongsToMany::make(__('Properties'), 'properties', Property::class),
+            BelongsToMany::make(__('Properties'), 'properties', Property::class)
+                ->fields(function() {
+                    return [
+                        $this->datetimeField(__('Expire At'), 'expires')->required(),
+                    ];
+                }),
         ];
     }
 
@@ -74,10 +79,10 @@ class Promotion extends Resource
      */
     public function fieldsForIndex(Request $request)
     {
-        return [ 
+        return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            Text::make(__('Promotion Name'), 'name')->sortable(), 
+            Text::make(__('Promotion Name'), 'name')->sortable(),
 
             $this->currencyField(__('Promotion Cost'))->sortable(),
 
@@ -86,13 +91,13 @@ class Promotion extends Resource
 
             Boolean::make(__('Active The Promotion'), 'marked_as')->sortable(),
 
-            Boolean::make(__('Tag The Promotion'), 'tagged')->sortable(), 
+            Boolean::make(__('Tag The Promotion'), 'tagged')->sortable(),
         ];
     }
 
     /**
      * Get the promotion orders.
-     * 
+     *
      * @return array
      */
     public static function promotionOrders()
@@ -115,7 +120,7 @@ class Promotion extends Resource
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
         return '/resources/'.static::uriKey();
-    } 
+    }
 
     /**
      * Return the location to redirect the user after update.

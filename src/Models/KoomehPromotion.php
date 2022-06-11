@@ -1,6 +1,6 @@
 <?php
 
-namespace Armincms\Koomeh\Models; 
+namespace Armincms\Koomeh\Models;
 
 use Armincms\Contract\Concerns\Configurable;
 use Armincms\Orderable\Contracts\Salable;
@@ -8,20 +8,23 @@ use Zareismail\Markable\HasActivation;
 use Zareismail\Markable\Markable;
 
 class KoomehPromotion extends Model implements Salable
-{     
+{
     use Configurable;
     use HasActivation;
     use Markable;
-    
+
 	/**
 	 * Query related KoomehPricing.
-	 * 
+	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
 	public function properties()
 	{
-		return $this->belongsToMany(KoomehProperty::class, 'koomeh_promotion_property')->withTimestamps();
-	} 
+		return $this->belongsToMany(KoomehProperty::class, 'koomeh_promotion_property')
+            ->using(KoomehPromotionProperty::class)
+            ->withPivot('expires')
+            ->withTimestamps();
+	}
 
     /**
      * Create a new Eloquent Collection instance.
@@ -36,17 +39,17 @@ class KoomehPromotion extends Model implements Salable
 
     /**
      * Determine if the promotion is tagged.
-     * 
+     *
      * @return boolean
      */
     public function isTagged()
     {
     	return boolval($this->tagged);
-    } 
+    }
 
     /**
      * Get the sale price currency.
-     * 
+     *
      * @return decimal
      */
     public function saleCurrency(): string
@@ -56,7 +59,7 @@ class KoomehPromotion extends Model implements Salable
 
     /**
      * Get the sale price of the item.
-     * 
+     *
      * @return decimal
      */
     public function salePrice(): float
@@ -66,7 +69,7 @@ class KoomehPromotion extends Model implements Salable
 
     /**
      * Get the real price of the item.
-     * 
+     *
      * @return decimal
      */
     public function oldPrice(): float
@@ -76,7 +79,7 @@ class KoomehPromotion extends Model implements Salable
 
     /**
      * Get the item name.
-     * 
+     *
      * @return decimal
      */
     public function saleName(): string
@@ -86,11 +89,11 @@ class KoomehPromotion extends Model implements Salable
 
     /**
      * Get the item description.
-     * 
+     *
      * @return decimal
      */
     public function saleDescription(): string
-    { 
+    {
         return $this->help;
     }
 }

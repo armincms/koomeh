@@ -1,7 +1,7 @@
 <?php
 
 namespace Armincms\Koomeh\Models;
-  
+
 use Armincms\Contract\Concerns\HasHits;
 use Armincms\Contract\Concerns\InteractsWithFragments;
 use Armincms\Contract\Concerns\InteractsWithMedia;
@@ -12,19 +12,19 @@ use Armincms\Contract\Contracts\Hitsable;
 use Armincms\Markable\Suspendable;
 use Armincms\Targomaan\Concerns\InteractsWithTargomaan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model; 
-use Illuminate\Database\Eloquent\SoftDeletes;  
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Zareismail\NovaPolicy\Contracts\Ownable;
 
 class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable, Hitsable
-{   
+{
     use HasHits;
     use InteractsWithFragments;
     use InteractsWithMedia;
     use InteractsWithWidgets;
-    use InteractsWithTargomaan;  
-    use SoftDeletes;  
-    use Suspendable;  
+    use InteractsWithTargomaan;
+    use SoftDeletes;
+    use Suspendable;
 
     /**
      * The translation model.
@@ -47,7 +47,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     protected $appends = [
         'images', 'price'
-    ]; 
+    ];
 
     /**
      * Perform any actions required after the model boots.
@@ -61,7 +61,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
         });
 
         static::deleting(function($model) {
-            if ($model->isForceDeleting()) { 
+            if ($model->isForceDeleting()) {
                 $model->translations()->delete();
                 $model->amenities()->sync([]);
                 $model->conditions()->sync([]);
@@ -72,7 +72,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get calculated gallery images.
-     * 
+     *
      * @return integer
      */
     public function getImagesAttribute()
@@ -82,7 +82,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get calculated price.
-     * 
+     *
      * @return float
      */
     public function getPriceAttribute()
@@ -92,7 +92,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get applied pricing.
-     * 
+     *
      * @return float
      */
     public function getPricingAttribute()
@@ -104,7 +104,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get availalbe amenities.
-     * 
+     *
      * @return integer
      */
     public function getAvailableDetailsAttribute($request)
@@ -114,7 +114,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get countable amenities.
-     * 
+     *
      * @return integer
      */
     public function getCountableDetailsAttribute($request)
@@ -124,7 +124,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get descriptive amenities.
-     * 
+     *
      * @return integer
      */
     public function getDescriptiveDetailsAttribute($request)
@@ -134,7 +134,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get grouped amenities.
-     * 
+     *
      * @return integer
      */
     public function groupedAmenities($request)
@@ -146,7 +146,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get available property statuses.
-     * 
+     *
      * @return array
      */
     public static function statuses()
@@ -160,7 +160,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Indicate Model Authenticatable.
-     * 
+     *
      * @return mixed
      */
     public function owner()
@@ -170,7 +170,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related User.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function auth()
@@ -180,7 +180,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehPropertyLocality.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function propertyLocality()
@@ -190,7 +190,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehPropertyType.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function propertyType()
@@ -200,7 +200,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehRoomType.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function roomType()
@@ -210,7 +210,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehReservation.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function reservation()
@@ -220,7 +220,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehPaymentBasis.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function paymentBasis()
@@ -230,7 +230,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehCondition.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function conditions()
@@ -240,7 +240,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehAmenity.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function amenities()
@@ -251,7 +251,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related LocationState.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function state()
@@ -261,7 +261,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related LocationCity.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function city()
@@ -271,7 +271,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related LocationZone.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function zone()
@@ -281,7 +281,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehPricing.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function pricings()
@@ -292,18 +292,21 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Query related KoomehPricing.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function promotions()
     {
-        return $this->belongsToMany(KoomehPromotion::class, 'koomeh_promotion_property')->withTimestamps();
+        return $this->belongsToMany(KoomehPromotion::class, 'koomeh_promotion_property')
+            ->using(KoomehPromotionProperty::class)
+            ->withPivot('expires')
+            ->withTimestamps();
     }
 
     /**
      * Get the corresponding cypress fragment.
-     * 
-     * @return 
+     *
+     * @return
      */
     public function cypressFragment(): string
     {
@@ -312,7 +315,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get the available media collections.
-     * 
+     *
      * @return array
      */
     public function getMediaCollections(): array
@@ -324,9 +327,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
                 'disk'      => 'image',
                 'limit'     => config('koomeh.medai.gallery_length', 10), // count of images
                 'accepts'   => ['image/jpeg', 'image/jpg', 'image/png'],
-            ], 
+            ],
         ];
-    } 
+    }
 
     /**
      * Serialize the model to pass into the client view for single item.
@@ -336,15 +339,15 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      */
     public function serializeForDetailWidget($request)
     {
-        return array_merge($this->toArray(), $this->serializeForIndexWidget($request), [  
-            'host' => $this->auth->serializeForWidget($request), 
-            'availableDetails'  => $this->getAvailableDetailsAttribute($request), 
-            'countableDetails'  => $this->getCountableDetailsAttribute($request), 
-            'descriptiveDetails'=> $this->getDescriptiveDetailsAttribute($request), 
+        return array_merge($this->toArray(), $this->serializeForIndexWidget($request), [
+            'host' => $this->auth->serializeForWidget($request),
+            'availableDetails'  => $this->getAvailableDetailsAttribute($request),
+            'countableDetails'  => $this->getCountableDetailsAttribute($request),
+            'descriptiveDetails'=> $this->getDescriptiveDetailsAttribute($request),
             'groupedDetails' => $this->amenities->groupBy('group_id')
                 ->map(function($grouped) use ($request) {
                     return $grouped->map->serializeForWidget($request);
-                }), 
+                }),
         ]);
     }
 
@@ -358,8 +361,8 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     {
         return array_merge($this->toArray(), [
             'creation_date' => $this->created_at->format('Y F d'),
-            'last_update'   => $this->updated_at->format('Y F d'), 
-            'url'   => $this->getUrl($request), 
+            'last_update'   => $this->updated_at->format('Y F d'),
+            'url'   => $this->getUrl($request),
             'stateName' => optional($this->state)->name,
             'cityName' => optional($this->city)->name,
             'zoneName' => optional($this->zone)->name,
@@ -376,7 +379,7 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get the targomaan driver.
-     * 
+     *
      * @return string
      */
     public function translator() : string
@@ -386,11 +389,11 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Get the uri value.
-     * 
+     *
      * @return string
      */
     public function getUri()
-    { 
+    {
         return $this->getTranslation('uri');
     }
 
@@ -399,9 +402,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
      *
      * @param  string  $uri
      * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Model|static 
+     * @return \Illuminate\Database\Eloquent\Model|static
      */
-    public function findByUri($uri, $columns = ['*'])  
+    public function findByUri($uri, $columns = ['*'])
     {
         return $this->withUri($uri)->first($columns);
     }
@@ -409,9 +412,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     /**
      * Query where has the given uri string.
      *
-     * @param  string  $uri 
-     * @param \Illuminate\Database\Eloquent\Builder $query 
-     * @return \Illuminate\Database\Eloquent\Builder 
+     * @param  string  $uri
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWithUri($query, $uri)
     {
@@ -423,9 +426,9 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
     /**
      * Query where code is equal to the given string.
      *
-     * @param  string  $code 
-     * @param \Illuminate\Database\Eloquent\Builder $query 
-     * @return \Illuminate\Database\Eloquent\Builder 
+     * @param  string  $code
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWithCode($query, $code)
     {
@@ -434,29 +437,29 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
 
     /**
      * Fill the `code` attribute of model.
-     * 
+     *
      * @return static
      */
     public function fillPropertyCode()
-    { 
+    {
         return $this->forceFill([
             'code' => static::generateNewCode(),
         ]);
-    } 
+    }
 
     /**
      * Genereate new code for property
-     * 
+     *
      * @return string
      */
     public static function generateNewCode()
-    { 
+    {
         while (static::withCode($code = time())->first()) {
             $code = time();
         }
 
         return $code;
-    } 
+    }
 
     /**
      * Query where authenticated.
