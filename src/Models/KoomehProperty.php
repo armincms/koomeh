@@ -370,6 +370,14 @@ class KoomehProperty extends Model implements Authenticatable, HasMedia, Ownable
             'propertyType' => $this->propertyType,
             'roomType' => $this->roomType,
             'pricing' => optional($this->pricing)->name,
+            'promotions' => optional($this->promotions)->map(function($promotion) {
+                if ($promotion->tagged) {
+                    return [
+                        'label' => $promotion->label,
+                        'icon'  => $promotion->icon,
+                    ];
+                }
+            })->filter(),
             'details' => $this->amenities
                             ->keyBy->getKey()
                             ->map->serializeForWidget($request)
