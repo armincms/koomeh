@@ -8,22 +8,23 @@ use Armincms\Location\Nova\City;
 use Armincms\Location\Nova\State;
 use Armincms\Location\Nova\Zone;
 use Illuminate\Http\Request;
-use GeneaLabs\NovaMapMarkerField\MapMarker; 
-use Laravel\Nova\Fields\Badge; 
-use Laravel\Nova\Fields\BelongsTo; 
-use Laravel\Nova\Fields\Boolean; 
-use Laravel\Nova\Fields\ID; 
-use Laravel\Nova\Fields\Number; 
-use Laravel\Nova\Fields\Select;  
-use Laravel\Nova\Fields\Stack;  
-use Laravel\Nova\Fields\Text;  
-use Laravel\Nova\Fields\Textarea;  
-use Laravel\Nova\Fields\Trix;  
-use Laravel\Nova\Panel;  
-use Laravel\Nova\Http\Requests\NovaRequest;  
+use GeneaLabs\NovaMapMarkerField\MapMarker;
+use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BooleanGroup;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Stack;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Panel;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Property extends Resource
-{ 
+{
     /**
      * The model the resource corresponds to.
      *
@@ -36,7 +37,7 @@ class Property extends Resource
      *
      * @var array
      */
-    public static $with = [ 'auth', 'propertyType', 'roomType' ];
+    public static $with = [ 'auth', 'propertyType', 'roomType', 'promotions'];
 
     /**
      * Get the fields displayed by the resource.
@@ -62,7 +63,7 @@ class Property extends Resource
                 ->required()
                 ->sortable()
                 ->showCreateRelationButton()
-                ->withoutTrashed(), 
+                ->withoutTrashed(),
 
             BelongsTo::make(__('Residence Locality'), 'propertyLocality', PropertyLocality::class)
                 ->required()
@@ -74,19 +75,19 @@ class Property extends Resource
                 ->required()
                 ->sortable()
                 ->showCreateRelationButton()
-                ->withoutTrashed(), 
+                ->withoutTrashed(),
 
             BelongsTo::make(__('Accommodation'), 'roomType', RoomType::class)
                 ->required()
                 ->sortable()
                 ->showCreateRelationButton()
-                ->withoutTrashed(), 
+                ->withoutTrashed(),
 
             Targomaan::make([
                 Text::make(__('Property Name'), 'name')
                     ->required()
-                    ->rules('required', 'max:250'),  
-            ]), 
+                    ->rules('required', 'max:250'),
+            ]),
 
             Text::make(__('Property Code'), 'code')
                 ->help(__('Leave blank to auto generate.'))
@@ -96,18 +97,18 @@ class Property extends Resource
                 return $this->hits;
             }),
 
-            Targomaan::make([ 
+            Targomaan::make([
                 Textarea::make(__('Summary of property'), 'summary')
                     ->nullable()
-                    ->rules('max:250'), 
+                    ->rules('max:250'),
 
                 Trix::make(__('Describe your property'), 'content')
-                    ->nullable(), 
+                    ->nullable(),
             ]),
 
             $this->medialibrary(__('Property Gallery'), 'gallery'),
 
-            Panels\Booking::make(__('Booking')), 
+            Panels\Booking::make(__('Booking')),
 
             Panels\Address::make(__('Property Address')),
 
@@ -127,25 +128,47 @@ class Property extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
- 
+
             Stack::make(__('Property Name'), 'name', [
-                Text::make('name'),
+                Text::make('name', function() {
+                    return \Illuminate\Support\Str::words($this->name, 8);
+                }),
                 Text::make('code', function($resource) {
                     return "#{$resource->code}";
                 }),
-            ]),  
-            
+            ]),
+
             $this->resourceUrls(),
- 
+
             Stack::make(__('Residence Detail'), 'property_type_id', [
                 BelongsTo::make(__('Residence Locality'), 'propertyLocality', PropertyLocality::class),
                 BelongsTo::make(__('Residence Type'), 'propertyType', PropertyType::class),
                 BelongsTo::make(__('Accommodation'), 'roomType', RoomType::class),
             ])->sortable(),
 
+            Stack::make(__('Property Promotion'), [
+                Boolean::make(__('Has Promotion'), function() {
+                    return $this->promotions->filter(function($promotion) {
+                        return $promotion->pivot->expires->gt(now());
+                    })->isNotEmpty();
+                }),
+
+                BooleanGroup::make(__('Property Promotion'), function() {
+                    return $this->promotions->mapWithKeys(function($promotion) {
+                        return [
+                            $promotion->id => $promotion->pivot->expires->gt(now())
+                        ];
+                    })->all();
+                })->options($this->promotions->mapWithKeys(function($promotion) {
+                    return [
+                        $promotion->id => "{$promotion->name} - {$promotion->pivot->expires->diffForHumans()}",
+                    ];
+                }))->hideFromIndex($this->promotions->isEmpty()),
+            ]),
+
             Badge::make(__('Residence Publish Status'), 'marked_as')
                 ->labels(static::statuses())
-                ->map([ 
+                ->map([
                     'draft' => 'danger',
                     'published' => 'success',
                     'pending' => 'warning',
@@ -154,17 +177,17 @@ class Property extends Resource
 
             BelongsTo::make(__('Residence Host'), 'auth', Host::class),
         ];
-    }   
+    }
 
     /**
      * Genereate new code for property
-     * 
+     *
      * @return string
      */
     public static function statuses()
     {
         return (array) forward_static_call([static::$model, 'statuses']);
-    } 
+    }
 
     /**
      * Get the cards available on the entity.
