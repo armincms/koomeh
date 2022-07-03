@@ -1,22 +1,27 @@
 <?php
- 
+
 namespace Armincms\Koomeh\Listeners;
- 
+
 use Armincms\Orderable\Events\OrderVerified;
- 
+
 class Order
 {
     /**
      * Check new order for promotions.
      */
     public function handlePromotions($event) {
+        if ($event->order->resource !== 'Armincms\\Koomeh\\Nova\\Promotion') {
+            // prevent to subscribe for another orders.
+            return;
+        }
+
         $event->order->loadMissing('items.salable')->items->each(function($item) {
             $item->salable->properties()->attach(data_get($item->detail, 'property'), [
                 'expires' => now()->addDays($item->salable->config('duration', 1)),
             ]);
         });
-    } 
- 
+    }
+
     /**
      * Register the listeners for the subscriber.
      *
@@ -26,7 +31,7 @@ class Order
     public function subscribe($events)
     {
         return [
-            OrderVerified::class => 'handlePromotions', 
+            OrderVerified::class => 'handlePromotions',
         ];
     }
 }
