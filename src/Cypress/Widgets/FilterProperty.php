@@ -297,4 +297,14 @@ class FilterProperty extends GutenbergWidget implements Cacheable
 
         return "%{$searchString}%";
     }
+
+    /**
+     * Get cache key.
+     *
+     * @return string
+     */
+    public function cacheKey()
+    {
+        return parent::cacheKey() . md5(request()->getQueryString());
+    }
 }
