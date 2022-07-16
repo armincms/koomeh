@@ -257,6 +257,7 @@ class FilterProperty extends GutenbergWidget implements Cacheable
                 Property::newModel()->whereDoesntHave('promotions')
                     ->published()
                     ->where($orderings)
+                    ->tap($queryCallback)
             )
             ->when($this->metaValue('pagination'), function($query) {
                 return $query->paginate($this->metaValue('per_page'));
